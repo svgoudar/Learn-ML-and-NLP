@@ -1,0 +1,1118 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Multiple Linear Regression &#8212; Machine Learning Handbook</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"N": "\\mathbb{N}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'machine_learning/supervised_learning/Linear_Regression/05_part';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Polynomial Regression" href="06_part.html" />
+    <link rel="prev" title="Cost Functions" href="04_part.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../introduction.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="Machine Learning Handbook - Home"/>
+    <script>document.write(`<img src="../../../_static/logo.png" class="logo__image only-dark" alt="Machine Learning Handbook - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../introduction.html">
+                    Machine Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../basics/01_part.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basics/02_part.html">Bayesian Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basics/03_part.html">Parametric vs Non-Parametric Models</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="overview.html">Linear Regression</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_part.html">Overview</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="02_part.html">Gradient Descent</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="03_part.html">Convergence Algorithm</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="04_part.html">Cost Functions</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Multiple Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06_part.html">Polynomial Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08_part.html">OLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09_part.html">Bias–Variance Tradeoff</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="Hyperparameter_Tuning/overview.html">Hyperparameter Tuning in Linear Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="Hyperparameter_Tuning/01_part.html">Regularization &amp; Generalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hyperparameter_Tuning/02_part.html">Lasso Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hyperparameter_Tuning/03_part.html">Ridge Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hyperparameter_Tuning/04_part.html">Elastic Net Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hyperparameter_Tuning/05_part.html">Workflow of Regularized Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hyperparameter_Tuning/06_part.html">Cross-Validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hyperparameter_Tuning/07_part.html">Hyperparameter Tuning methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Hyperparameter_Tuning/08_part.html">Handle Overfitting</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Logistic_Regression/overview.html">Logistic Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/01_part.html">Assumtpions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/06_part.html">One-vs-Rest (OVR) Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/07_part.html">Handling Imabalance dataset</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Logistic_Regression/HyperParameter_Tuning/overview.html">Hyperparameter Tuning</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Logistic_Regression/HyperParameter_Tuning/01_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Logistic_Regression/HyperParameter_Tuning/02_part.html">Cross Validation</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Support_Vector_Machine/overview.html">SVM</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Support_Vector_Machine/SVR/overview.html">SVR</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVR/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVR/02_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVR/03_part.html">Hyper-Parameter Intiution</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Support_Vector_Machine/SVC/overview.html">SVC</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVC/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVC/02_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVC/03_part.html">Hyper-paramter Tuning Intiution</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../Support_Vector_Machine/01_part.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Support_Vector_Machine/02_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Support_Vector_Machine/03_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Support_Vector_Machine/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Support_Vector_Machine/05_part.html">Kernels</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Naive_Bayes/overview.html">Naive Bayes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/02_part.html">Intuition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/03_part.html">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/05_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/06_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/07_part.html">Variants of NB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/08_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../KNN/overview.html">K-Nearest Neighbors (KNN)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/04_part.html">How to select cluster <span class="math notranslate nohighlight">\(k\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/05_part.html">KNN Variants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/07_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/08_part.html">Hyperparameter Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/09_part.html">Regression &amp; Classification</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Decision_Tree/overview.html">Decision Tree</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Decision_Tree/DTR/overview.html">Decision Tree Regressor</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTR/01_part.html">Cost Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTR/02_part.html">Performance Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTR/03_part.html">Hyperparameter tuning</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Decision_Tree/DTC/overview.html">Decision Tree Classifier</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTC/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTC/02_part.html">Performance Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTC/03_part.html">Hyperparameters Tuning</a></li>
+
+
+
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTC/04_part.html">Handle Underfitting/Overfitting</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../Decision_Tree/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Decision_Tree/02_part.html">Purity Measures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Decision_Tree/03_part.html">Hyperparameter Tuning in Decision Tree</a></li>
+
+
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Random_Forest/overview.html">Random Forest</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/01_part.html">Ensembling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/02_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/03_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/05_part.html">Out-of-Bag (OOB) Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/07_part.html">Hyperparameter Tuning</a></li>
+
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../AdaBoost/overview.html">AdaBoost (Adaptive Boosting)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/03_part.html"><strong>Workflow</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/06_part.html">AdaBoost Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/07_part.html">Hyperparameter Tuning</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/08_part.html">AdaBoost Classifier</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Gradient_boosting/overview.html">Gradient Boosting</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/02_part.html">Intuition</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/04_part.html">Gradient Boosting Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/05_part.html">Gradient Boosting Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/07_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../XGBoost/overview.html">XGBoost</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../XGBoost/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../XGBoost/02_part.html">Intiution</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../XGBoost/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../XGBoost/04_part.html">XGBoost Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../XGBoost/05_part.html">XGBoost Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../XGBoost/06_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../XGBoost/07_part.html">Performance metrics</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../XGBoost/08_part.html">HyperParameter Tuning</a></li>
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/K_Means/overview.html">K-Means Clustering</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/01_part.html"><strong>Assumptions</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/02_part.html">Intuition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/06_part.html">Hyperparameter tuning</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/07_part.html">K-Means from scratch</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/overview.html">Hierarchical Clustering</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/03_part.html">Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/06_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/PCA/overview.html">PCA</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/02_part.html">Intiutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/03_part.html"><strong>Workflows</strong></a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/04_part.html">Hyperparameter Tuning</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/T_SNE/overview.html">t-SNE</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/03_part.html">Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/04_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/05_part.html">Hyper Parameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/overview.html">DBSCAN</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/06_part.html">Hyperparameter Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/07_part.html">Problem Statement</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/08_part.html">Silhouette Clustering</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/Anamoly_Detection/overview.html">Anamoly Detection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Anamoly_Detection/01_part.html">Isolation Forest</a></li>
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Anamoly_Detection/02_part.html">Local Outlier Factor</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../NLP/overview.html">NLP</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/01_part.html">NLP Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/02_part.html">Terminologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/03_part.html">Part-of-Speech (POS)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/04_part.html">Sentiment Analysis</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../NLP/Text_Pre_Processor/overview.html">Text Preprocessing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/01_part.html">Tokenization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/02_part.html">Stopwords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/03_part.html">Stemming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/04_part.html">Lemmatization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/05_part.html">Handle Numbers in NLP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/06_part.html">Handle Emojis &amp; Emoticons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/07_part.html">Spelling Corrections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/08_part.html">Text Normalization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../NLP/Vectorization/overview.html">Vectorization</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/01_part.html">Bag of Words (BoW)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/02_part.html">TF (Term Frequency)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/03_part.html">TF-IDF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/04_part.html">Word Embeddings</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/svgoudar/AI-ML-Essentials/blob/master/machine_learning/supervised_learning/Linear_Regression/05_part.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/svgoudar/AI-ML-Essentials" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/svgoudar/AI-ML-Essentials/issues/new?title=Issue%20on%20page%20%2Fmachine_learning/supervised_learning/Linear_Regression/05_part.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/machine_learning/supervised_learning/Linear_Regression/05_part.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Multiple Linear Regression</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-intuition">Example Intuition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-of-multiple-linear-regression">Assumptions of Multiple Linear Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cost-function">Cost Function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-best-fit">Finding the Best Fit</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-regression-1-feature-line">Simple Regression (1 feature → line):</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-regression-with-2-features-2d-plane-hyperplane-in-3d">Multiple Regression with 2 features (2D plane → hyperplane in 3D):</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-contour-plot">What is a Contour Plot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#components-of-a-contour-plot">Components of a Contour Plot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-in-statistics-ml">Example in Statistics / ML</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analogy">Analogy</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <nav class="contents" id="contents" role="doc-toc">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#multiple-linear-regression" id="id1">Multiple Linear Regression</a></p>
+<ul>
+<li><p><a class="reference internal" href="#example-intuition" id="id2">Example Intuition</a></p></li>
+<li><p><a class="reference internal" href="#assumptions-of-multiple-linear-regression" id="id3">Assumptions of Multiple Linear Regression</a></p></li>
+<li><p><a class="reference internal" href="#cost-function" id="id4">Cost Function</a></p></li>
+<li><p><a class="reference internal" href="#finding-the-best-fit" id="id5">Finding the Best Fit</a></p></li>
+<li><p><a class="reference internal" href="#visualization" id="id6">Visualization</a></p>
+<ul>
+<li><p><a class="reference internal" href="#simple-regression-1-feature-line" id="id7">Simple Regression (1 feature → line):</a></p></li>
+<li><p><a class="reference internal" href="#multiple-regression-with-2-features-2d-plane-hyperplane-in-3d" id="id8">Multiple Regression with 2 features (2D plane → hyperplane in 3D):</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#what-is-a-contour-plot" id="id9">What is a Contour Plot</a></p></li>
+<li><p><a class="reference internal" href="#components-of-a-contour-plot" id="id10">Components of a Contour Plot</a></p></li>
+<li><p><a class="reference internal" href="#example-in-statistics-ml" id="id11">Example in Statistics / ML</a></p></li>
+<li><p><a class="reference internal" href="#analogy" id="id12">Analogy</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="multiple-linear-regression">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Multiple Linear Regression</a><a class="headerlink" href="#multiple-linear-regression" title="Permalink to this heading">#</a></h1>
+<ul class="simple">
+<li><p>In <strong>Simple Linear Regression</strong>, we model the relationship between <strong>one independent variable</strong> <span class="math notranslate nohighlight">\(X\)</span> and a <strong>dependent variable</strong> <span class="math notranslate nohighlight">\(Y\)</span>.</p></li>
+<li><p>In <strong>Multiple Linear Regression</strong>, we extend this idea to <strong>two or more independent variables</strong>.</p></li>
+</ul>
+<p>The equation is:</p>
+<div class="math notranslate nohighlight">
+\[
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_n X_n + \epsilon
+\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Y\)</span> = dependent variable (target)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta_0\)</span> = intercept (value of <span class="math notranslate nohighlight">\(Y\)</span> when all <span class="math notranslate nohighlight">\(X\)</span>s are zero)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta_1, \beta_2, ..., \beta_n\)</span> = coefficients for each feature</p></li>
+<li><p><span class="math notranslate nohighlight">\(X_1, X_2, ..., X_n\)</span> = independent variables (features)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon\)</span> = error term (noise that the model cannot explain)</p></li>
+</ul>
+<hr class="docutils" />
+<section id="example-intuition">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Example Intuition</a><a class="headerlink" href="#example-intuition" title="Permalink to this heading">#</a></h2>
+<p>Suppose we want to predict <strong>house price</strong> based on:</p>
+<ul class="simple">
+<li><p>Size of the house (<span class="math notranslate nohighlight">\(X_1\)</span>)</p></li>
+<li><p>Number of bedrooms (<span class="math notranslate nohighlight">\(X_2\)</span>)</p></li>
+<li><p>Distance from city center (<span class="math notranslate nohighlight">\(X_3\)</span>)</p></li>
+</ul>
+<p>Equation could look like:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Price} = 50,000 + 300 \times \text{Size} + 10,000 \times \text{Bedrooms} - 2,000 \times \text{Distance}
+\]</div>
+<p>Interpretation:</p>
+<ul class="simple">
+<li><p>For every extra unit of <strong>size</strong>, price increases by $300.</p></li>
+<li><p>For every extra <strong>bedroom</strong>, price increases by $10,000.</p></li>
+<li><p>For every km away from the city, price decreases by $2,000.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="assumptions-of-multiple-linear-regression">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Assumptions of Multiple Linear Regression</a><a class="headerlink" href="#assumptions-of-multiple-linear-regression" title="Permalink to this heading">#</a></h2>
+<p>MLR works best when these assumptions hold:</p>
+<ol class="arabic simple">
+<li><p><strong>Linearity</strong> → relationship between predictors and target is linear.</p></li>
+<li><p><strong>Independence</strong> → features are independent of each other (low multicollinearity).</p></li>
+<li><p><strong>Homoscedasticity</strong> → variance of residuals is constant.</p></li>
+<li><p><strong>Normality</strong> → residuals (errors) should be normally distributed.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="cost-function">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Cost Function</a><a class="headerlink" href="#cost-function" title="Permalink to this heading">#</a></h2>
+<p>The goal is to <strong>minimize the error</strong> between predictions and actual values.
+We use <strong>Mean Squared Error (MSE)</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+J(\beta) = \frac{1}{2m} \sum_{i=1}^{m} \left( \hat{y}^{(i)} - y^{(i)} \right)^2
+\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(m\)</span> = number of data points</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{y}^{(i)}\)</span> = predicted value</p></li>
+<li><p><span class="math notranslate nohighlight">\(y^{(i)}\)</span> = actual value</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="finding-the-best-fit">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Finding the Best Fit</a><a class="headerlink" href="#finding-the-best-fit" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>We use <strong>Gradient Descent</strong> or <strong>Normal Equation</strong> to estimate coefficients (<span class="math notranslate nohighlight">\(\beta\)</span> values).</p></li>
+<li><p>Best fit line (or hyperplane in higher dimensions) minimizes the cost function.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="visualization">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Visualization</a><a class="headerlink" href="#visualization" title="Permalink to this heading">#</a></h2>
+<p>Since more than 2 features are hard to plot directly, let’s see some cases:</p>
+<section id="simple-regression-1-feature-line">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Simple Regression (1 feature → line):</a><a class="headerlink" href="#simple-regression-1-feature-line" title="Permalink to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+Y = \beta_0 + \beta_1 X
+\]</div>
+</section>
+<section id="multiple-regression-with-2-features-2d-plane-hyperplane-in-3d">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Multiple Regression with 2 features (2D plane → hyperplane in 3D):</a><a class="headerlink" href="#multiple-regression-with-2-features-2d-plane-hyperplane-in-3d" title="Permalink to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2
+\]</div>
+<p>The regression output becomes a <strong>plane</strong> instead of a line.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.mplot3d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes3D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+
+<span class="c1"># Generate synthetic data</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>  <span class="c1"># Feature 1</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span>   <span class="c1"># Feature 2</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">X1</span> <span class="o">+</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">X2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># Target with some noise</span>
+
+<span class="c1"># Prepare features for regression</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">))</span>
+
+<span class="c1"># Fit multiple linear regression</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">Y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Create a mesh grid for plotting regression plane</span>
+<span class="n">x1_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">X1</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">X1</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">x2_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">X2</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">X2</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">x1_grid</span><span class="p">,</span> <span class="n">x2_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x1_range</span><span class="p">,</span> <span class="n">x2_range</span><span class="p">)</span>
+<span class="n">y_grid</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span> <span class="o">+</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x1_grid</span> <span class="o">+</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x2_grid</span>
+
+<span class="c1"># Plot 3D scatter and regression plane</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="c1"># ax = fig.add_subplot(111, projection=&#39;3d&#39;)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Scatter points</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Data Points&quot;</span><span class="p">)</span>
+
+<span class="c1"># Regression plane</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">x1_grid</span><span class="p">,</span> <span class="n">x2_grid</span><span class="p">,</span> <span class="n">y_grid</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># Labels</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Feature 1 (X1)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Feature 2 (X2)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;Target (Y)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Multiple Linear Regression: Regression Plane in 3D&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/4947a6a8d5c315cd659ae6b8a63ab6a678ab0ac98b0934b53d3139eabb2fd11c.png" src="../../../_images/4947a6a8d5c315cd659ae6b8a63ab6a678ab0ac98b0934b53d3139eabb2fd11c.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Define cost function for multiple linear regression (2 features for visualization)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cost_function</span><span class="p">(</span><span class="n">theta0</span><span class="p">,</span> <span class="n">theta1</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">theta0</span> <span class="o">+</span> <span class="n">theta1</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># considering only one feature for visualization</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">m</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">predictions</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cost</span>
+
+<span class="c1"># Generate synthetic dataset (house size vs price)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Add intercept term</span>
+<span class="n">X_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">X</span><span class="p">]</span>
+
+<span class="c1"># Create a grid of theta0, theta1 values</span>
+<span class="n">theta0_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">theta1_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">J_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">theta0_vals</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">theta1_vals</span><span class="p">)))</span>
+
+<span class="c1"># Compute cost for each theta0, theta1</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t0</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">theta0_vals</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">t1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">theta1_vals</span><span class="p">):</span>
+        <span class="n">J_vals</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">cost_function</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">X_b</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># Transpose for correct orientation in contour plot</span>
+<span class="n">J_vals</span> <span class="o">=</span> <span class="n">J_vals</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># Plot cost function contours</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">theta0_vals</span><span class="p">,</span> <span class="n">theta1_vals</span><span class="p">,</span> <span class="n">J_vals</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\theta_0$ (Intercept)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\theta_1$ (Slope)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Cost Function Contour Plot for Multiple Linear Regression (2D view)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Cost (J)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/ca8e39480b108aa7e153b8d90a976140e616cef916b2769a024d303777089838.png" src="../../../_images/ca8e39480b108aa7e153b8d90a976140e616cef916b2769a024d303777089838.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="what-is-a-contour-plot">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">What is a Contour Plot</a><a class="headerlink" href="#what-is-a-contour-plot" title="Permalink to this heading">#</a></h2>
+<p>A <strong>contour plot</strong> is a 2D plot that shows how a <strong>3D surface</strong> looks when you “slice it horizontally” at different heights (values).</p>
+<ul class="simple">
+<li><p>Imagine you have a mountain 🌄.</p></li>
+<li><p>If you cut the mountain at different altitudes and look from above, you will see rings (levels).</p></li>
+<li><p>Each <strong>ring</strong> represents points that have the same height.</p></li>
+</ul>
+<p>That’s exactly what a contour plot does!</p>
+</section>
+<hr class="docutils" />
+<section id="components-of-a-contour-plot">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Components of a Contour Plot</a><a class="headerlink" href="#components-of-a-contour-plot" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>X-axis &amp; Y-axis</strong> → independent variables (e.g., parameters θ₀ and θ₁ in regression).</p></li>
+<li><p><strong>Contour lines (level curves)</strong> → each line represents a constant value of a function (say cost J(θ)).</p></li>
+<li><p><strong>Colors or shading</strong> → darker/lighter colors may show whether values are higher or lower.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="example-in-statistics-ml">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Example in Statistics / ML</a><a class="headerlink" href="#example-in-statistics-ml" title="Permalink to this heading">#</a></h2>
+<p>In <strong>Linear Regression</strong>, we often visualize the <strong>cost function</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+J(\theta_0, \theta_1)
+\]</div>
+<ul class="simple">
+<li><p>This is a 3D surface shaped like a bowl (convex).</p></li>
+<li><p>Instead of plotting the 3D bowl, we use <strong>contour plots</strong>.</p></li>
+<li><p>The innermost contour (center) represents the <strong>global minimum</strong> (lowest cost).</p></li>
+<li><p>Gradient descent moves step by step <strong>across the contours</strong> towards the center.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="analogy">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Analogy</a><a class="headerlink" href="#analogy" title="Permalink to this heading">#</a></h2>
+<p>Think of a <strong>topographic map</strong> 🗺️ (used in hiking):</p>
+<ul class="simple">
+<li><p>The lines show elevation levels.</p></li>
+<li><p>Closer lines = steep slope.</p></li>
+<li><p>Wider lines = flat surface.</p></li>
+<li><p>The deepest valley point = <strong>global minimum</strong>.</p></li>
+</ul>
+<p>In machine learning:</p>
+<ul class="simple">
+<li><p>θ₀ and θ₁ are the “coordinates” (like longitude &amp; latitude).</p></li>
+<li><p>J(θ) (cost) is the “elevation”.</p></li>
+<li><p>Gradient descent is like rolling a ball downhill until it reaches the lowest valley.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./machine_learning\supervised_learning\Linear_Regression"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="04_part.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Cost Functions</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="06_part.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Polynomial Regression</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-intuition">Example Intuition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assumptions-of-multiple-linear-regression">Assumptions of Multiple Linear Regression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cost-function">Cost Function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-best-fit">Finding the Best Fit</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-regression-1-feature-line">Simple Regression (1 feature → line):</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-regression-with-2-features-2d-plane-hyperplane-in-3d">Multiple Regression with 2 features (2D plane → hyperplane in 3D):</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-contour-plot">What is a Contour Plot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#components-of-a-contour-plot">Components of a Contour Plot</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-in-statistics-ml">Example in Statistics / ML</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analogy">Analogy</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By svgoudar
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

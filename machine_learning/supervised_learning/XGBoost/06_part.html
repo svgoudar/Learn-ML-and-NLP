@@ -1,0 +1,982 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Cost Functions &#8212; Machine Learning Handbook</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"N": "\\mathbb{N}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'machine_learning/supervised_learning/XGBoost/06_part';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Performance metrics" href="07_part.html" />
+    <link rel="prev" title="XGBoost Classifier" href="05_part.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../introduction.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="Machine Learning Handbook - Home"/>
+    <script>document.write(`<img src="../../../_static/logo.png" class="logo__image only-dark" alt="Machine Learning Handbook - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../introduction.html">
+                    Machine Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../basics/01_part.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basics/02_part.html">Bayesian Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basics/03_part.html">Parametric vs Non-Parametric Models</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Linear_Regression/overview.html">Linear Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Linear_Regression/01_part.html">Overview</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../Linear_Regression/02_part.html">Gradient Descent</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../Linear_Regression/03_part.html">Convergence Algorithm</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../Linear_Regression/04_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Linear_Regression/05_part.html">Multiple Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Linear_Regression/06_part.html">Polynomial Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Linear_Regression/07_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Linear_Regression/08_part.html">OLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Linear_Regression/09_part.html">Bias–Variance Tradeoff</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Linear_Regression/Hyperparameter_Tuning/overview.html">Hyperparameter Tuning in Linear Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Linear_Regression/Hyperparameter_Tuning/01_part.html">Regularization &amp; Generalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Linear_Regression/Hyperparameter_Tuning/02_part.html">Lasso Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Linear_Regression/Hyperparameter_Tuning/03_part.html">Ridge Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Linear_Regression/Hyperparameter_Tuning/04_part.html">Elastic Net Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Linear_Regression/Hyperparameter_Tuning/05_part.html">Workflow of Regularized Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Linear_Regression/Hyperparameter_Tuning/06_part.html">Cross-Validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Linear_Regression/Hyperparameter_Tuning/07_part.html">Hyperparameter Tuning methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Linear_Regression/Hyperparameter_Tuning/08_part.html">Handle Overfitting</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Logistic_Regression/overview.html">Logistic Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/01_part.html">Assumtpions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/06_part.html">One-vs-Rest (OVR) Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Logistic_Regression/07_part.html">Handling Imabalance dataset</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Logistic_Regression/HyperParameter_Tuning/overview.html">Hyperparameter Tuning</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Logistic_Regression/HyperParameter_Tuning/01_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Logistic_Regression/HyperParameter_Tuning/02_part.html">Cross Validation</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Support_Vector_Machine/overview.html">SVM</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Support_Vector_Machine/SVR/overview.html">SVR</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVR/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVR/02_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVR/03_part.html">Hyper-Parameter Intiution</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Support_Vector_Machine/SVC/overview.html">SVC</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVC/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVC/02_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Support_Vector_Machine/SVC/03_part.html">Hyper-paramter Tuning Intiution</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../Support_Vector_Machine/01_part.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Support_Vector_Machine/02_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Support_Vector_Machine/03_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Support_Vector_Machine/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Support_Vector_Machine/05_part.html">Kernels</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Naive_Bayes/overview.html">Naive Bayes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/02_part.html">Intuition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/03_part.html">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/05_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/06_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/07_part.html">Variants of NB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Naive_Bayes/08_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../KNN/overview.html">K-Nearest Neighbors (KNN)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/04_part.html">How to select cluster <span class="math notranslate nohighlight">\(k\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/05_part.html">KNN Variants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/07_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/08_part.html">Hyperparameter Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KNN/09_part.html">Regression &amp; Classification</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Decision_Tree/overview.html">Decision Tree</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Decision_Tree/DTR/overview.html">Decision Tree Regressor</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTR/01_part.html">Cost Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTR/02_part.html">Performance Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTR/03_part.html">Hyperparameter tuning</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Decision_Tree/DTC/overview.html">Decision Tree Classifier</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTC/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTC/02_part.html">Performance Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTC/03_part.html">Hyperparameters Tuning</a></li>
+
+
+
+<li class="toctree-l3"><a class="reference internal" href="../Decision_Tree/DTC/04_part.html">Handle Underfitting/Overfitting</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../Decision_Tree/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Decision_Tree/02_part.html">Purity Measures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Decision_Tree/03_part.html">Hyperparameter Tuning in Decision Tree</a></li>
+
+
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Random_Forest/overview.html">Random Forest</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/01_part.html">Ensembling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/02_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/03_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/05_part.html">Out-of-Bag (OOB) Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Random_Forest/07_part.html">Hyperparameter Tuning</a></li>
+
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../AdaBoost/overview.html">AdaBoost (Adaptive Boosting)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/03_part.html"><strong>Workflow</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/06_part.html">AdaBoost Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/07_part.html">Hyperparameter Tuning</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../AdaBoost/08_part.html">AdaBoost Classifier</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Gradient_boosting/overview.html">Gradient Boosting</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/02_part.html">Intuition</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/04_part.html">Gradient Boosting Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/05_part.html">Gradient Boosting Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Gradient_boosting/07_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="overview.html">XGBoost</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_part.html">Intiution</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_part.html">XGBoost Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05_part.html">XGBoost Classifier</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_part.html">Performance metrics</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="08_part.html">HyperParameter Tuning</a></li>
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/K_Means/overview.html">K-Means Clustering</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/01_part.html"><strong>Assumptions</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/02_part.html">Intuition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/06_part.html">Hyperparameter tuning</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/07_part.html">K-Means from scratch</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/overview.html">Hierarchical Clustering</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/03_part.html">Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/06_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/PCA/overview.html">PCA</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/02_part.html">Intiutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/03_part.html"><strong>Workflows</strong></a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/04_part.html">Hyperparameter Tuning</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/T_SNE/overview.html">t-SNE</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/03_part.html">Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/04_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/05_part.html">Hyper Parameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/overview.html">DBSCAN</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/06_part.html">Hyperparameter Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/07_part.html">Problem Statement</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/08_part.html">Silhouette Clustering</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/Anamoly_Detection/overview.html">Anamoly Detection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Anamoly_Detection/01_part.html">Isolation Forest</a></li>
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Anamoly_Detection/02_part.html">Local Outlier Factor</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../NLP/overview.html">NLP</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/01_part.html">NLP Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/02_part.html">Terminologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/03_part.html">Part-of-Speech (POS)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/04_part.html">Sentiment Analysis</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../NLP/Text_Pre_Processor/overview.html">Text Preprocessing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/01_part.html">Tokenization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/02_part.html">Stopwords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/03_part.html">Stemming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/04_part.html">Lemmatization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/05_part.html">Handle Numbers in NLP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/06_part.html">Handle Emojis &amp; Emoticons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/07_part.html">Spelling Corrections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/08_part.html">Text Normalization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../NLP/Vectorization/overview.html">Vectorization</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/01_part.html">Bag of Words (BoW)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/02_part.html">TF (Term Frequency)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/03_part.html">TF-IDF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/04_part.html">Word Embeddings</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/svgoudar/AI-ML-Essentials/blob/master/machine_learning/supervised_learning/XGBoost/06_part.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/svgoudar/AI-ML-Essentials" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/svgoudar/AI-ML-Essentials/issues/new?title=Issue%20on%20page%20%2Fmachine_learning/supervised_learning/XGBoost/06_part.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/machine_learning/supervised_learning/XGBoost/06_part.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Cost Functions</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cost-functions-in-xgbregressor">Cost Functions in <strong>XGBRegressor</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-loss-functions">Common loss functions:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cost-functions-in-xgbclassifier">Cost Functions in <strong>XGBClassifier</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Common loss functions:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuition-why-these-losses">Intuition: Why these losses?</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <nav class="contents" id="contents" role="doc-toc">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#cost-functions" id="id2">Cost Functions</a></p>
+<ul>
+<li><p><a class="reference internal" href="#cost-functions-in-xgbregressor" id="id3">Cost Functions in <strong>XGBRegressor</strong></a></p>
+<ul>
+<li><p><a class="reference internal" href="#common-loss-functions" id="id4">Common loss functions:</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#cost-functions-in-xgbclassifier" id="id5">Cost Functions in <strong>XGBClassifier</strong></a></p>
+<ul>
+<li><p><a class="reference internal" href="#id1" id="id6">Common loss functions:</a></p></li>
+<li><p><a class="reference internal" href="#intuition-why-these-losses" id="id7">Intuition: Why these losses?</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="cost-functions">
+<h1><a class="toc-backref" href="#id2" role="doc-backlink">Cost Functions</a><a class="headerlink" href="#cost-functions" title="Permalink to this heading">#</a></h1>
+<p>XGBoost is <strong>not a single model</strong> but a <strong>framework</strong> that supports different cost functions (a.k.a. loss functions) depending on whether you’re solving regression or classification.</p>
+<hr class="docutils" />
+<section id="cost-functions-in-xgbregressor">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Cost Functions in <strong>XGBRegressor</strong></a><a class="headerlink" href="#cost-functions-in-xgbregressor" title="Permalink to this heading">#</a></h2>
+<p>In regression, the task is to predict a continuous value. XGBRegressor uses <strong>differentiable loss functions</strong> that measure prediction error.</p>
+<section id="common-loss-functions">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Common loss functions:</a><a class="headerlink" href="#common-loss-functions" title="Permalink to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong>Squared Error (default)</strong></p>
+<div class="math notranslate nohighlight">
+\[
+   L(y, \hat{y}) = \frac{1}{2}(y - \hat{y})^2
+   \]</div>
+<ul class="simple">
+<li><p>Penalizes larger errors more heavily.</p></li>
+<li><p>Smooth and differentiable.</p></li>
+<li><p>Works well when errors are normally distributed.</p></li>
+</ul>
+</li>
+<li><p><strong>Absolute Error (MAE)</strong></p>
+<div class="math notranslate nohighlight">
+\[
+   L(y, \hat{y}) = |y - \hat{y}|
+   \]</div>
+<ul class="simple">
+<li><p>Robust to outliers (less penalty for extreme values).</p></li>
+<li><p>Slower optimization since gradient is less smooth.</p></li>
+</ul>
+</li>
+<li><p><strong>Huber Loss</strong> (mix between MSE &amp; MAE)</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+   L(y, \hat{y}) =
+   \begin{cases}
+   \frac{1}{2}(y - \hat{y})^2 &amp; |y - \hat{y}| \leq \delta \\
+   \delta |y - \hat{y}| - \frac{1}{2}\delta^2 &amp; |y - \hat{y}| &gt; \delta
+   \end{cases}
+   \end{split}\]</div>
+<ul class="simple">
+<li><p>Balances robustness and sensitivity.</p></li>
+</ul>
+</li>
+<li><p><strong>Quantile Loss</strong></p>
+<div class="math notranslate nohighlight">
+\[
+   L(y, \hat{y}) = \max(\alpha(y - \hat{y}), (1-\alpha)(\hat{y} - y))
+   \]</div>
+<ul class="simple">
+<li><p>Useful for prediction intervals (not just mean).</p></li>
+</ul>
+</li>
+</ol>
+<p>🔑 In practice, XGBRegressor defaults to <strong>squared error loss</strong> unless specified (<code class="docutils literal notranslate"><span class="pre">objective=&quot;reg:squarederror&quot;</span></code>).</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="cost-functions-in-xgbclassifier">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Cost Functions in <strong>XGBClassifier</strong></a><a class="headerlink" href="#cost-functions-in-xgbclassifier" title="Permalink to this heading">#</a></h2>
+<p>For classification, the task is to predict probabilities (then assign classes).
+The cost functions measure <strong>probability calibration</strong> (how close predicted probabilities are to true labels).</p>
+<section id="id1">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Common loss functions:</a><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong>Logistic Loss (Binary Classification)</strong></p>
+<div class="math notranslate nohighlight">
+\[
+   L(y, \hat{p}) = - \big( y \log(\hat{p}) + (1-y) \log(1 - \hat{p}) \big)
+   \]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{p} = \sigma(\hat{y}) = \frac{1}{1+e^{-\hat{y}}}\)</span>.</p>
+<ul class="simple">
+<li><p>Penalizes wrong confident predictions heavily.</p></li>
+<li><p>Optimized with Newton’s method (second-order gradients).</p></li>
+<li><p>Default for <code class="docutils literal notranslate"><span class="pre">objective=&quot;binary:logistic&quot;</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Softmax Loss (Multiclass Classification)</strong>
+For <span class="math notranslate nohighlight">\(K\)</span> classes:</p>
+<div class="math notranslate nohighlight">
+\[
+   L(y, \hat{p}) = - \sum_{k=1}^{K} \mathbf{1}_{y=k} \log(\hat{p}_k)
+   \]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+   \hat{p}_k = \frac{e^{\hat{y}_k}}{\sum_{j=1}^{K} e^{\hat{y}_j}}
+   \]</div>
+<ul class="simple">
+<li><p>Standard cross-entropy loss.</p></li>
+<li><p>Used when <code class="docutils literal notranslate"><span class="pre">objective=&quot;multi:softprob&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;multi:softmax&quot;</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Hinge Loss (SVM-style, optional)</strong></p>
+<div class="math notranslate nohighlight">
+\[
+   L(y, \hat{y}) = \max(0, 1 - y\hat{y})
+   \]</div>
+<ul class="simple">
+<li><p>Focuses on the <strong>margin</strong> between classes.</p></li>
+<li><p>Less probabilistic, more decision-boundary focused.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="intuition-why-these-losses">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Intuition: Why these losses?</a><a class="headerlink" href="#intuition-why-these-losses" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Regression losses → measure <strong>distance</strong> between prediction &amp; actual values.</p></li>
+<li><p>Classification losses → measure <strong>probability calibration</strong> (confidence in correct class).</p></li>
+<li><p>All are <strong>differentiable</strong>, allowing <strong>gradient boosting</strong> with 1st &amp; 2nd order derivatives.</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Summary:</strong></p>
+<ul class="simple">
+<li><p><strong>XGBRegressor</strong> → squared error, MAE, Huber, quantile.</p></li>
+<li><p><strong>XGBClassifier</strong> → logistic loss (binary), softmax loss (multiclass), hinge loss (SVM-like).</p></li>
+<li><p>Loss choice depends on whether you want robustness to outliers, probability calibration, or hard-margin separation.</p></li>
+</ul>
+<hr class="docutils" />
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./machine_learning\supervised_learning\XGBoost"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="05_part.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">XGBoost Classifier</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="07_part.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Performance metrics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cost-functions-in-xgbregressor">Cost Functions in <strong>XGBRegressor</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-loss-functions">Common loss functions:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cost-functions-in-xgbclassifier">Cost Functions in <strong>XGBClassifier</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Common loss functions:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intuition-why-these-losses">Intuition: Why these losses?</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By svgoudar
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
