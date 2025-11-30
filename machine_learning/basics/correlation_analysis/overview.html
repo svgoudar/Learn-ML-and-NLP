@@ -1,0 +1,1601 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Correlation Analysis &#8212; Machine Learning Handbook</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"N": "\\mathbb{N}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'machine_learning/basics/correlation_analysis/overview';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Continous X" href="01_part.html" />
+    <link rel="prev" title="Parametric vs Non-Parametric Models" href="../03_part.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../introduction.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="Machine Learning Handbook - Home"/>
+    <script>document.write(`<img src="../../../_static/logo.png" class="logo__image only-dark" alt="Machine Learning Handbook - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../introduction.html">
+                    Machine Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../01_part.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_part.html">Bayesian Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_part.html">Parametric vs Non-Parametric Models</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Correlation Analysis</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="01_part.html">Continous X</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="02_part.html">Discrete Numeric X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_part.html">Binary X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_part.html">Ordinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05_part.html">Categorical X</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../supervised_learning/Linear_Regression/overview.html">Linear Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Linear_Regression/01_part.html">Overview</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Linear_Regression/02_part.html">Gradient Descent</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Linear_Regression/03_part.html">Convergence Algorithm</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Linear_Regression/04_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Linear_Regression/05_part.html">Multiple Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Linear_Regression/06_part.html">Polynomial Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Linear_Regression/07_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Linear_Regression/08_part.html">OLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Linear_Regression/09_part.html">Bias–Variance Tradeoff</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../supervised_learning/Linear_Regression/Hyperparameter_Tuning/overview.html">Hyperparameter Tuning in Linear Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Linear_Regression/Hyperparameter_Tuning/01_part.html">Regularization &amp; Generalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Linear_Regression/Hyperparameter_Tuning/02_part.html">Lasso Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Linear_Regression/Hyperparameter_Tuning/03_part.html">Ridge Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Linear_Regression/Hyperparameter_Tuning/04_part.html">Elastic Net Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Linear_Regression/Hyperparameter_Tuning/05_part.html">Workflow of Regularized Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Linear_Regression/Hyperparameter_Tuning/06_part.html">Cross-Validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Linear_Regression/Hyperparameter_Tuning/07_part.html">Hyperparameter Tuning methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Linear_Regression/Hyperparameter_Tuning/08_part.html">Handle Overfitting</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/overview.html">Logistic Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/01_part.html">Assumtpions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/06_part.html">One-vs-Rest (OVR) Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/07_part.html">Handling Imabalance dataset</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/HyperParameter_Tuning/overview.html">Hyperparameter Tuning</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/HyperParameter_Tuning/01_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Logistic_Regression/HyperParameter_Tuning/02_part.html">Cross Validation</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/overview.html">SVM</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/SVR/overview.html">SVR</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/SVR/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/SVR/02_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/SVR/03_part.html">Hyper-Parameter Intiution</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/SVC/overview.html">SVC</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/SVC/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/SVC/02_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/SVC/03_part.html">Hyper-paramter Tuning Intiution</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/01_part.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/02_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/03_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Support_Vector_Machine/05_part.html">Kernels</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../supervised_learning/Naive_Bayes/overview.html">Naive Bayes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Naive_Bayes/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Naive_Bayes/02_part.html">Intuition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Naive_Bayes/03_part.html">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Naive_Bayes/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Naive_Bayes/05_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Naive_Bayes/06_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Naive_Bayes/07_part.html">Variants of NB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Naive_Bayes/08_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../supervised_learning/KNN/overview.html">K-Nearest Neighbors (KNN)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/KNN/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/KNN/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/KNN/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/KNN/04_part.html">How to select cluster <span class="math notranslate nohighlight">\(k\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/KNN/05_part.html">KNN Variants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/KNN/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/KNN/07_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/KNN/08_part.html">Hyperparameter Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/KNN/09_part.html">Regression &amp; Classification</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../supervised_learning/Decision_Tree/overview.html">Decision Tree</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../supervised_learning/Decision_Tree/DTR/overview.html">Decision Tree Regressor</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Decision_Tree/DTR/01_part.html">Cost Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Decision_Tree/DTR/02_part.html">Performance Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Decision_Tree/DTR/03_part.html">Hyperparameter tuning</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../supervised_learning/Decision_Tree/DTC/overview.html">Decision Tree Classifier</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Decision_Tree/DTC/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Decision_Tree/DTC/02_part.html">Performance Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Decision_Tree/DTC/03_part.html">Hyperparameters Tuning</a></li>
+
+
+
+<li class="toctree-l3"><a class="reference internal" href="../../supervised_learning/Decision_Tree/DTC/04_part.html">Handle Underfitting/Overfitting</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Decision_Tree/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Decision_Tree/02_part.html">Purity Measures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Decision_Tree/03_part.html">Hyperparameter Tuning in Decision Tree</a></li>
+
+
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../supervised_learning/Random_Forest/overview.html">Random Forest</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Random_Forest/01_part.html">Ensembling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Random_Forest/02_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Random_Forest/03_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Random_Forest/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Random_Forest/05_part.html">Out-of-Bag (OOB) Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Random_Forest/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Random_Forest/07_part.html">Hyperparameter Tuning</a></li>
+
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../supervised_learning/AdaBoost/overview.html">AdaBoost (Adaptive Boosting)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/AdaBoost/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/AdaBoost/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/AdaBoost/03_part.html"><strong>Workflow</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/AdaBoost/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/AdaBoost/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/AdaBoost/06_part.html">AdaBoost Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/AdaBoost/07_part.html">Hyperparameter Tuning</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/AdaBoost/08_part.html">AdaBoost Classifier</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../supervised_learning/Gradient_boosting/overview.html">Gradient Boosting</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Gradient_boosting/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Gradient_boosting/02_part.html">Intuition</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Gradient_boosting/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Gradient_boosting/04_part.html">Gradient Boosting Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Gradient_boosting/05_part.html">Gradient Boosting Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Gradient_boosting/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/Gradient_boosting/07_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../supervised_learning/XGBoost/overview.html">XGBoost</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/XGBoost/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/XGBoost/02_part.html">Intiution</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/XGBoost/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/XGBoost/04_part.html">XGBoost Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/XGBoost/05_part.html">XGBoost Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/XGBoost/06_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/XGBoost/07_part.html">Performance metrics</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../supervised_learning/XGBoost/08_part.html">HyperParameter Tuning</a></li>
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/K_Means/overview.html">K-Means Clustering</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/01_part.html"><strong>Assumptions</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/02_part.html">Intuition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/06_part.html">Hyperparameter tuning</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/K_Means/07_part.html">K-Means from scratch</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/overview.html">Hierarchical Clustering</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/03_part.html">Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Hierarchical_Clustering/06_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/PCA/overview.html">PCA</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/02_part.html">Intiutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/03_part.html"><strong>Workflows</strong></a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/PCA/04_part.html">Hyperparameter Tuning</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/T_SNE/overview.html">t-SNE</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/03_part.html">Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/04_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/T_SNE/05_part.html">Hyper Parameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/overview.html">DBSCAN</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/06_part.html">Hyperparameter Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/07_part.html">Problem Statement</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/DBSCAN/08_part.html">Silhouette Clustering</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised_learning/Anamoly_Detection/overview.html">Anamoly Detection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Anamoly_Detection/01_part.html">Isolation Forest</a></li>
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../unsupervised_learning/Anamoly_Detection/02_part.html">Local Outlier Factor</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../NLP/overview.html">NLP</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/01_part.html">NLP Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/02_part.html">Terminologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/03_part.html">Part-of-Speech (POS)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../NLP/04_part.html">Sentiment Analysis</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../NLP/Text_Pre_Processor/overview.html">Text Preprocessing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/01_part.html">Tokenization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/02_part.html">Stopwords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/03_part.html">Stemming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/04_part.html">Lemmatization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/05_part.html">Handle Numbers in NLP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/06_part.html">Handle Emojis &amp; Emoticons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/07_part.html">Spelling Corrections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Text_Pre_Processor/08_part.html">Text Normalization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../NLP/Vectorization/overview.html">Vectorization</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/01_part.html">Bag of Words (BoW)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/02_part.html">TF (Term Frequency)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/03_part.html">TF-IDF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../NLP/Vectorization/04_part.html">Word Embeddings</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/svgoudar/AI-ML-Essentials/blob/master/machine_learning/basics/correlation_analysis/overview.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/svgoudar/AI-ML-Essentials" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/svgoudar/AI-ML-Essentials/issues/new?title=Issue%20on%20page%20%2Fmachine_learning/basics/correlation_analysis/overview.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/machine_learning/basics/correlation_analysis/overview.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Correlation Analysis</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-correlation-analysis-matrix-all-scenarios"><strong>Complete Correlation Analysis Matrix (All Scenarios)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-x-vs-y">Continuous X vs Y</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-numeric-x-vs-y">Discrete Numeric X vs Y</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-x-vs-y">Binary X vs Y</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ordinal-x-vs-y">Ordinal X vs Y</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-nominal-x-vs-y">Categorical (Nominal) X vs Y</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-correlation-methods-continuous-continuous">LINEAR CORRELATION METHODS (Continuous ↔ Continuous)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rank-based-monotonic-methods-ordered-or-nonlinear-monotonic">RANK-BASED / MONOTONIC METHODS (Ordered or Nonlinear Monotonic)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kendall-tau">Kendall Tau (τ)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-association-methods-discrete-discrete">CATEGORICAL ASSOCIATION METHODS (Discrete ↔ Discrete)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cramers-v">Cramér’s V</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phi-coefficient">Phi Coefficient</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contingency-coefficient">Contingency Coefficient</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-nonlinear-information-based-association-methods"><strong>D. NONLINEAR / INFORMATION-BASED ASSOCIATION METHODS</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distance-correlation">Distance Correlation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mic-maximal-information-coefficient">MIC (Maximal Information Coefficient)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#group-comparison-methods-mixed-data-types">GROUP-COMPARISON METHODS (Mixed Data Types)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages"><strong>Advantages</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anova-f-test">ANOVA (F-test)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kruskalwallis-test">Kruskal–Wallis Test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t-test-two-sample-t-test">t-Test (two-sample t-test)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mannwhitney-u-test">Mann–Whitney U Test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-model-based-association-methods">ADVANCED / MODEL-BASED ASSOCIATION METHODS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression-coefficient">Logistic Regression Coefficient (β)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#roc-auc-as-feature-association">ROC-AUC as Feature Association</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tree-based-feature-importance">Tree-Based Feature Importance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shap-values">SHAP Values</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <nav class="contents" id="contents" role="doc-toc">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#correlation-analysis" id="id1">Correlation Analysis</a></p>
+<ul>
+<li><p><a class="reference internal" href="#complete-correlation-analysis-matrix-all-scenarios" id="id2"><strong>Complete Correlation Analysis Matrix (All Scenarios)</strong></a></p></li>
+<li><p><a class="reference internal" href="#continuous-x-vs-y" id="id3">Continuous X vs Y</a></p></li>
+<li><p><a class="reference internal" href="#discrete-numeric-x-vs-y" id="id4">Discrete Numeric X vs Y</a></p></li>
+<li><p><a class="reference internal" href="#binary-x-vs-y" id="id5">Binary X vs Y</a></p></li>
+<li><p><a class="reference internal" href="#ordinal-x-vs-y" id="id6">Ordinal X vs Y</a></p></li>
+<li><p><a class="reference internal" href="#categorical-nominal-x-vs-y" id="id7">Categorical (Nominal) X vs Y</a></p></li>
+<li><p><a class="reference internal" href="#linear-correlation-methods-continuous-continuous" id="id8">LINEAR CORRELATION METHODS (Continuous ↔ Continuous)</a></p></li>
+<li><p><a class="reference internal" href="#rank-based-monotonic-methods-ordered-or-nonlinear-monotonic" id="id9">RANK-BASED / MONOTONIC METHODS (Ordered or Nonlinear Monotonic)</a></p></li>
+<li><p><a class="reference internal" href="#kendall-tau" id="id10">Kendall Tau (τ)</a></p></li>
+<li><p><a class="reference internal" href="#categorical-association-methods-discrete-discrete" id="id11">CATEGORICAL ASSOCIATION METHODS (Discrete ↔ Discrete)</a></p></li>
+<li><p><a class="reference internal" href="#cramers-v" id="id12">Cramér’s V</a></p></li>
+<li><p><a class="reference internal" href="#phi-coefficient" id="id13">Phi Coefficient</a></p></li>
+<li><p><a class="reference internal" href="#contingency-coefficient" id="id14">Contingency Coefficient</a></p></li>
+<li><p><a class="reference internal" href="#d-nonlinear-information-based-association-methods" id="id15"><strong>D. NONLINEAR / INFORMATION-BASED ASSOCIATION METHODS</strong></a></p></li>
+<li><p><a class="reference internal" href="#distance-correlation" id="id16">Distance Correlation</a></p></li>
+<li><p><a class="reference internal" href="#mic-maximal-information-coefficient" id="id17">MIC (Maximal Information Coefficient)</a></p></li>
+<li><p><a class="reference internal" href="#group-comparison-methods-mixed-data-types" id="id18">GROUP-COMPARISON METHODS (Mixed Data Types)</a></p></li>
+<li><p><a class="reference internal" href="#advantages" id="id19"><strong>Advantages</strong></a></p></li>
+<li><p><a class="reference internal" href="#anova-f-test" id="id20">ANOVA (F-test)</a></p></li>
+<li><p><a class="reference internal" href="#kruskalwallis-test" id="id21">Kruskal–Wallis Test</a></p></li>
+<li><p><a class="reference internal" href="#t-test-two-sample-t-test" id="id22">t-Test (two-sample t-test)</a></p></li>
+<li><p><a class="reference internal" href="#mannwhitney-u-test" id="id23">Mann–Whitney U Test</a></p></li>
+<li><p><a class="reference internal" href="#advanced-model-based-association-methods" id="id24">ADVANCED / MODEL-BASED ASSOCIATION METHODS</a></p></li>
+<li><p><a class="reference internal" href="#logistic-regression-coefficient" id="id25">Logistic Regression Coefficient (β)</a></p></li>
+<li><p><a class="reference internal" href="#roc-auc-as-feature-association" id="id26">ROC-AUC as Feature Association</a></p></li>
+<li><p><a class="reference internal" href="#tree-based-feature-importance" id="id27">Tree-Based Feature Importance</a></p></li>
+<li><p><a class="reference internal" href="#shap-values" id="id28">SHAP Values</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="correlation-analysis">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Correlation Analysis</a><a class="headerlink" href="#correlation-analysis" title="Permalink to this heading">#</a></h1>
+<p>Below is a <strong>complete and exhaustive correlation-analysis reference table</strong> covering <strong>every possible X–Y combination</strong> of data types used in Machine Learning and Statistics.</p>
+<p>This includes:</p>
+<ul class="simple">
+<li><p>Continuous</p></li>
+<li><p>Discrete numeric</p></li>
+<li><p>Binary</p></li>
+<li><p>Categorical</p></li>
+<li><p>Ordinal</p></li>
+</ul>
+<p>All association methods are included.</p>
+<hr class="docutils" />
+<section id="complete-correlation-analysis-matrix-all-scenarios">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink"><strong>Complete Correlation Analysis Matrix (All Scenarios)</strong></a><a class="headerlink" href="#complete-correlation-analysis-matrix-all-scenarios" title="Permalink to this heading">#</a></h2>
+<p><strong>Legend</strong></p>
+<ul class="simple">
+<li><p><strong>Continuous</strong> = Numeric real-valued</p></li>
+<li><p><strong>Discrete Numeric</strong> = Integer counts (like number of calls, items)</p></li>
+<li><p><strong>Binary</strong> = 0/1 or Yes/No</p></li>
+<li><p><strong>Categorical</strong> = Nominal (A/B/C, no order)</p></li>
+<li><p><strong>Ordinal</strong> = Ordered categories (Low/Medium/High)</p></li>
+</ul>
+<p>The matrix below covers all 25 combinations.</p>
+</section>
+<hr class="docutils" />
+<section id="continuous-x-vs-y">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Continuous X vs Y</a><a class="headerlink" href="#continuous-x-vs-y" title="Permalink to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>X (Feature)</p></th>
+<th class="head"><p>Y (Target)</p></th>
+<th class="head"><p>Best Methods</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Continuous</p></td>
+<td><p>Continuous</p></td>
+<td><p><strong>Pearson</strong>, <strong>Spearman</strong>, <strong>Kendall</strong>, <strong>Distance Correlation</strong>, <strong>Mutual Information</strong>, <strong>Partial Correlation</strong>, <strong>MIC</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Continuous</p></td>
+<td><p>Binary</p></td>
+<td><p><strong>Point-Biserial</strong>, <strong>Logistic Coefficient</strong>, <strong>AUC</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Continuous</p></td>
+<td><p>Ordinal</p></td>
+<td><p><strong>Spearman</strong>, <strong>Kendall</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Continuous</p></td>
+<td><p>Categorical (Nominal)</p></td>
+<td><p><strong>ANOVA F-test</strong>, <strong>Kruskal–Wallis</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Continuous</p></td>
+<td><p>Discrete Numeric</p></td>
+<td><p><strong>Pearson</strong>, <strong>Spearman</strong>, <strong>Kendall</strong>, <strong>MI</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="discrete-numeric-x-vs-y">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Discrete Numeric X vs Y</a><a class="headerlink" href="#discrete-numeric-x-vs-y" title="Permalink to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>X</p></th>
+<th class="head"><p>Y</p></th>
+<th class="head"><p>Best Methods</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Discrete Numeric</p></td>
+<td><p>Continuous</p></td>
+<td><p><strong>t-test</strong> (if 2 groups), <strong>ANOVA</strong> (k groups), <strong>Kruskal–Wallis</strong>, <strong>Point-Biserial</strong> (if X is effectively binary), <strong>Spearman</strong> (if numeric rank-like), <strong>MI</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Discrete Numeric</p></td>
+<td><p>Binary</p></td>
+<td><p><strong>Point-Biserial</strong> (if X binary), <strong>Spearman</strong> (if ordinal meaning), <strong>t-test</strong>, <strong>Mann–Whitney</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Discrete Numeric</p></td>
+<td><p>Ordinal</p></td>
+<td><p><strong>Spearman</strong>, <strong>Kendall</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Discrete Numeric</p></td>
+<td><p>Categorical Nominal</p></td>
+<td><p><strong>ANOVA</strong>, <strong>Kruskal–Wallis</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Discrete Numeric</p></td>
+<td><p>Discrete Numeric</p></td>
+<td><p><strong>Spearman</strong>, <strong>Kendall</strong>, <strong>Chi-square</strong> (if frequencies), <strong>Mutual Information</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="binary-x-vs-y">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Binary X vs Y</a><a class="headerlink" href="#binary-x-vs-y" title="Permalink to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>X</p></th>
+<th class="head"><p>Y</p></th>
+<th class="head"><p>Best Methods</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Binary</p></td>
+<td><p>Continuous</p></td>
+<td><p><strong>Point-Biserial</strong>, <strong>t-test</strong>, <strong>Mann–Whitney</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Binary</p></td>
+<td><p>Binary</p></td>
+<td><p><strong>Phi coefficient</strong>, <strong>Chi-square</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Binary</p></td>
+<td><p>Ordinal</p></td>
+<td><p><strong>Spearman</strong>, <strong>Kendall</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Binary</p></td>
+<td><p>Categorical Nominal</p></td>
+<td><p><strong>Chi-square</strong>, <strong>Cramér’s V</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Binary</p></td>
+<td><p>Discrete Numeric</p></td>
+<td><p><strong>Spearman</strong>, <strong>Point-Biserial</strong>, <strong>t-test</strong>, <strong>MI</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ordinal-x-vs-y">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Ordinal X vs Y</a><a class="headerlink" href="#ordinal-x-vs-y" title="Permalink to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>X</p></th>
+<th class="head"><p>Y</p></th>
+<th class="head"><p>Best Methods</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ordinal</p></td>
+<td><p>Continuous</p></td>
+<td><p><strong>Spearman</strong>, <strong>Kendall</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Ordinal</p></td>
+<td><p>Binary</p></td>
+<td><p><strong>Point-Biserial</strong> (if ordinal reduces to 2), <strong>Spearman</strong>, <strong>Kendall</strong>, <strong>MI</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Ordinal</p></td>
+<td><p>Ordinal</p></td>
+<td><p><strong>Spearman</strong>, <strong>Kendall</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Ordinal</p></td>
+<td><p>Categorical Nominal</p></td>
+<td><p><strong>Chi-square</strong>, <strong>Cramér’s V</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Ordinal</p></td>
+<td><p>Discrete Numeric</p></td>
+<td><p><strong>Spearman</strong>, <strong>Kendall</strong>, <strong>MI</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="categorical-nominal-x-vs-y">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Categorical (Nominal) X vs Y</a><a class="headerlink" href="#categorical-nominal-x-vs-y" title="Permalink to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>X</p></th>
+<th class="head"><p>Y</p></th>
+<th class="head"><p>Best Methods</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Categorical</p></td>
+<td><p>Continuous</p></td>
+<td><p><strong>ANOVA</strong>, <strong>Kruskal–Wallis</strong>, <strong>Eta-squared</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Categorical</p></td>
+<td><p>Binary</p></td>
+<td><p><strong>Chi-square</strong>, <strong>Cramér’s V</strong>, <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Categorical</p></td>
+<td><p>Ordinal</p></td>
+<td><p><strong>Chi-square</strong>, <strong>Gamma</strong>, <strong>Cramér’s V</strong>, <strong>Kendall</strong>, <strong>MI</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Categorical</p></td>
+<td><p>Categorical</p></td>
+<td><p><strong>Chi-square</strong>, <strong>Cramér’s V</strong>, <strong>Phi</strong> (2×2), <strong>Mutual Information</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Categorical</p></td>
+<td><p>Discrete Numeric</p></td>
+<td><p><strong>ANOVA</strong>, <strong>Kruskal–Wallis</strong>, <strong>MI</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils" />
+<p><strong>Summary</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>X Type</p></th>
+<th class="head"><p>Y Type</p></th>
+<th class="head"><p>Recommended Techniques</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Continuous → Continuous</strong></p></td>
+<td><p>Pearson, Spearman, Kendall, Distance Corr, Partial Corr, MI</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Continuous → Discrete Ordinal</strong></p></td>
+<td><p>Spearman, Kendall, MI</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Continuous → Discrete Categorical</strong></p></td>
+<td><p>ANOVA, Kruskal–Wallis, MI</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Continuous → Binary</strong></p></td>
+<td><p>Point-Biserial, AUC, Logistic β, MI</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Discrete → Continuous</strong></p></td>
+<td><p>t-test, ANOVA, Kruskal–Wallis, Spearman, MI</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Discrete → Discrete</strong></p></td>
+<td><p>Chi-square, Cramér’s V, Phi, MI</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Ordinal ↔ Ordinal</strong></p></td>
+<td><p>Spearman, Kendall, MI</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Binary ↔ Binary</strong></p></td>
+<td><p>Phi, Chi-square, MI</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Nominal ↔ Nominal</strong></p></td>
+<td><p>Chi-square, Cramér’s V, MI</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="linear-correlation-methods-continuous-continuous">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">LINEAR CORRELATION METHODS (Continuous ↔ Continuous)</a><a class="headerlink" href="#linear-correlation-methods-continuous-continuous" title="Permalink to this heading">#</a></h2>
+<p>These methods evaluate <strong>linear dependence</strong>, meaning how closely data points fit a straight line.</p>
+<hr class="docutils" />
+<p><strong>Pearson Correlation (Linear Correlation)</strong></p>
+<p><strong>Definition</strong></p>
+<p>Measures the <strong>strength and direction of linear relationship</strong> between two continuous variables X and Y.</p>
+<div class="math notranslate nohighlight">
+\[
+r = \frac{\sum (x - \bar{x})(y - \bar{y})}
+{\sqrt{\sum (x - \bar{x})^2 \sum (y - \bar{y})^2}}
+\]</div>
+<p>Value ranges from:</p>
+<ul class="simple">
+<li><p><strong>+1 → perfect positive linear relation</strong></p></li>
+<li><p><strong>−1 → perfect negative linear relation</strong></p></li>
+<li><p><strong>0 → no linear relation</strong></p></li>
+</ul>
+<p><strong>Assumptions</strong></p>
+<ul class="simple">
+<li><p>X and Y are continuous</p></li>
+<li><p>Relationship is linear</p></li>
+<li><p>No extreme outliers</p></li>
+<li><p>Both distributions are approximately normal</p></li>
+</ul>
+<p><strong>Use Cases</strong></p>
+<ul class="simple">
+<li><p>Linear regression</p></li>
+<li><p>Feature selection</p></li>
+<li><p>Detecting linear trends</p></li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p>Cannot detect <strong>nonlinear</strong> relationships</p></li>
+<li><p>Very sensitive to <strong>outliers</strong></p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Partial Correlation</strong></p>
+<p>Measures the correlation between X and Y <strong>after removing effect of one or more other variables (Z).</strong></p>
+<div class="math notranslate nohighlight">
+\[
+r_{xy\cdot z}=
+\frac{r_{xy}-r_{xz}r_{yz}}{\sqrt{(1-r_{xz}^2)(1-r_{yz}^2)}}
+\]</div>
+<p><strong>Assumptions</strong></p>
+<ul class="simple">
+<li><p>Same as Pearson (linear, continuous)</p></li>
+<li><p>Confounding variable Z known</p></li>
+</ul>
+<p><strong>Use Cases</strong></p>
+<ul class="simple">
+<li><p>In multivariate regression</p></li>
+<li><p>When features are correlated with each other (multicollinearity)</p></li>
+<li><p>To find independent contribution of feature X</p></li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p>Only captures <strong>linear</strong> controlled associations</p></li>
+<li><p>Requires large sample size</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="rank-based-monotonic-methods-ordered-or-nonlinear-monotonic">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">RANK-BASED / MONOTONIC METHODS (Ordered or Nonlinear Monotonic)</a><a class="headerlink" href="#rank-based-monotonic-methods-ordered-or-nonlinear-monotonic" title="Permalink to this heading">#</a></h2>
+<p>These methods work on <strong>ranks</strong>, not actual values.</p>
+<p>They are robust to:</p>
+<ul class="simple">
+<li><p>outliers</p></li>
+<li><p>skewed distributions</p></li>
+<li><p>non-linear but monotonic relations</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Spearman Rank Correlation (ρ)</strong></p>
+<p>Computes Pearson correlation on <strong>rank-transformed</strong> values.</p>
+<div class="math notranslate nohighlight">
+\[
+\rho = 1- \frac{6\sum d_i^2}{n(n^2-1)}
+\]</div>
+<p>Where (d_i) is rank difference.</p>
+<p><strong>Detects</strong></p>
+<ul class="simple">
+<li><p>Monotonic relationships (increasing/decreasing)
+even if non-linear.</p></li>
+</ul>
+<p><strong>Use Cases</strong></p>
+<ul class="simple">
+<li><p>Ordinal variables</p></li>
+<li><p>Nonlinear increasing trends</p></li>
+<li><p>Continuous variables with outliers</p></li>
+</ul>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p>Resistant to outliers</p></li>
+<li><p>Works with ordinal data</p></li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p>Cannot detect non-monotonic patterns (U-shape)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="kendall-tau">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Kendall Tau (τ)</a><a class="headerlink" href="#kendall-tau" title="Permalink to this heading">#</a></h2>
+<p>Measures strength of monotonic relationship using <strong>concordant</strong> and <strong>discordant</strong> pairs.</p>
+<div class="math notranslate nohighlight">
+\[
+\tau = \frac{C - D}{\frac{1}{2}n(n-1)}
+\]</div>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p>More robust for small samples</p></li>
+<li><p>Handles ties better</p></li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p>Computationally slower</p></li>
+<li><p>Slightly less interpretable than Spearman</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="categorical-association-methods-discrete-discrete">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">CATEGORICAL ASSOCIATION METHODS (Discrete ↔ Discrete)</a><a class="headerlink" href="#categorical-association-methods-discrete-discrete" title="Permalink to this heading">#</a></h2>
+<p>Used when both variables are categorical (binary or multi-class).</p>
+<hr class="docutils" />
+<p><strong>Chi-Square Test of Independence</strong></p>
+<p>Tests whether two categorical variables are <strong>statistically associated</strong>.</p>
+<div class="math notranslate nohighlight">
+\[
+\chi^2 = \sum \frac{(O - E)^2}{E}
+\]</div>
+<p>Where O = observed, E = expected.</p>
+<p><strong>Use Cases</strong></p>
+<ul class="simple">
+<li><p>Contingency tables</p></li>
+<li><p>Feature selection for classification</p></li>
+<li><p>Detecting association</p></li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p>Only tells <strong>if</strong> there is a relationship, <strong>not how strong</strong></p></li>
+<li><p>Requires large samples</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="cramers-v">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Cramér’s V</a><a class="headerlink" href="#cramers-v" title="Permalink to this heading">#</a></h2>
+<p>Measures <strong>strength</strong> of association between two categorical variables.</p>
+<div class="math notranslate nohighlight">
+\[
+V = \sqrt{\frac{\chi^2}{n(k-1)}}
+\]</div>
+<p>Range:</p>
+<ul class="simple">
+<li><p><strong>0 → no association</strong></p></li>
+<li><p><strong>1 → perfect association</strong></p></li>
+</ul>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p>Works for all table sizes (r × c)</p></li>
+<li><p>Normalized metric</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="phi-coefficient">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Phi Coefficient</a><a class="headerlink" href="#phi-coefficient" title="Permalink to this heading">#</a></h2>
+<p>Equivalent to Pearson correlation for <strong>2×2 tables</strong> (binary vs binary).</p>
+<div class="math notranslate nohighlight">
+\[
+\phi = \sqrt{\frac{\chi^2}{n}}
+\]</div>
+<p><strong>Use Cases</strong></p>
+<ul class="simple">
+<li><p>Binary gender vs binary buying decision</p></li>
+<li><p>Fraud yes/no vs approval yes/no</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="contingency-coefficient">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Contingency Coefficient</a><a class="headerlink" href="#contingency-coefficient" title="Permalink to this heading">#</a></h2>
+<p>Legacy measure; less interpretable. Replaced by Cramér’s V.</p>
+</section>
+<hr class="docutils" />
+<section id="d-nonlinear-information-based-association-methods">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink"><strong>D. NONLINEAR / INFORMATION-BASED ASSOCIATION METHODS</strong></a><a class="headerlink" href="#d-nonlinear-information-based-association-methods" title="Permalink to this heading">#</a></h2>
+<p>Detect <strong>any type</strong> of relationship between variables—even irregular, complex shapes.</p>
+<hr class="docutils" />
+<p><strong>Mutual Information (MI)</strong></p>
+<p>Measures how much information about Y is gained by knowing X.</p>
+<div class="math notranslate nohighlight">
+\[
+I(X;Y)=\sum p(x,y)\log \frac{p(x,y)}{p(x)p(y)}
+\]</div>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p>Detects all forms of dependency</p></li>
+<li><p>Works with any combination of data types</p></li>
+<li><p>Used heavily in ML (Random Forest, XGBoost feature selection)</p></li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p>Has no fixed scale (not between -1 and 1)</p></li>
+<li><p>Hard to interpret magnitude</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="distance-correlation">
+<h2><a class="toc-backref" href="#id16" role="doc-backlink">Distance Correlation</a><a class="headerlink" href="#distance-correlation" title="Permalink to this heading">#</a></h2>
+<p>Correlation = 0 <strong>iff variables are independent</strong>
+(a stronger property than Pearson).</p>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p>Captures all nonlinear dependencies</p></li>
+<li><p>Works for complex patterns</p></li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p>More computationally expensive</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="mic-maximal-information-coefficient">
+<h2><a class="toc-backref" href="#id17" role="doc-backlink">MIC (Maximal Information Coefficient)</a><a class="headerlink" href="#mic-maximal-information-coefficient" title="Permalink to this heading">#</a></h2>
+<p>Detects any “grid-like” pattern (linear, curved, exponential, periodic).</p>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p>Very powerful</p></li>
+<li><p>Captures almost all kinds of relationships</p></li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p>Slow on large data</p></li>
+<li><p>Harder to interpret</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="group-comparison-methods-mixed-data-types">
+<h2><a class="toc-backref" href="#id18" role="doc-backlink">GROUP-COMPARISON METHODS (Mixed Data Types)</a><a class="headerlink" href="#group-comparison-methods-mixed-data-types" title="Permalink to this heading">#</a></h2>
+<p>Used when <strong>one variable is continuous and the other is categorical</strong>.</p>
+<hr class="docutils" />
+<p><strong>12. Point-Biserial Correlation</strong></p>
+<p>Special case of Pearson where:</p>
+<ul class="simple">
+<li><p>X = continuous</p></li>
+<li><p>Y = binary</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+r_{pb}=
+\frac{\bar{x}_1 - \bar{x}_0}{s_x}\sqrt{\frac{n_1 n_0}{n^2}}
+\]</div>
+</section>
+<section id="advantages">
+<h2><a class="toc-backref" href="#id19" role="doc-backlink"><strong>Advantages</strong></a><a class="headerlink" href="#advantages" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Simple and interpretable</p></li>
+<li><p>Works for logistic-type separation</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="anova-f-test">
+<h2><a class="toc-backref" href="#id20" role="doc-backlink">ANOVA (F-test)</a><a class="headerlink" href="#anova-f-test" title="Permalink to this heading">#</a></h2>
+<p>Compares mean of continuous variable across <strong>k ≥ 2 categories</strong>.</p>
+<div class="math notranslate nohighlight">
+\[
+F = \frac{\text{Between-group variance}}{\text{Within-group variance}}
+\]</div>
+<p><strong>Use Cases</strong></p>
+<ul class="simple">
+<li><p>Continuous X vs Categorical Y (many classes)</p></li>
+<li><p>Categorical X vs Continuous Y</p></li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p>Assumes normality</p></li>
+<li><p>Assumes equal variance</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="kruskalwallis-test">
+<h2><a class="toc-backref" href="#id21" role="doc-backlink">Kruskal–Wallis Test</a><a class="headerlink" href="#kruskalwallis-test" title="Permalink to this heading">#</a></h2>
+<p>Nonparametric version of ANOVA.</p>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p>No assumptions</p></li>
+<li><p>Works with skewed data</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="t-test-two-sample-t-test">
+<h2><a class="toc-backref" href="#id22" role="doc-backlink">t-Test (two-sample t-test)</a><a class="headerlink" href="#t-test-two-sample-t-test" title="Permalink to this heading">#</a></h2>
+<p>Used when:</p>
+<ul class="simple">
+<li><p>X continuous</p></li>
+<li><p>Y binary</p></li>
+</ul>
+<p><strong>Tests</strong></p>
+<p>Whether mean difference between two groups is significant.</p>
+<p><strong>Limitations</strong></p>
+<ul class="simple">
+<li><p>Only works for binary Y</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="mannwhitney-u-test">
+<h2><a class="toc-backref" href="#id23" role="doc-backlink">Mann–Whitney U Test</a><a class="headerlink" href="#mannwhitney-u-test" title="Permalink to this heading">#</a></h2>
+<p><strong>Definition</strong></p>
+<p>Rank-based alternative to t-test.</p>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p>Works for non-normal distributions</p></li>
+<li><p>Robust to outliers</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="advanced-model-based-association-methods">
+<h2><a class="toc-backref" href="#id24" role="doc-backlink">ADVANCED / MODEL-BASED ASSOCIATION METHODS</a><a class="headerlink" href="#advanced-model-based-association-methods" title="Permalink to this heading">#</a></h2>
+<p>These methods examine <strong>predictive power</strong>, not pure statistical correlation.</p>
+</section>
+<hr class="docutils" />
+<section id="logistic-regression-coefficient">
+<h2><a class="toc-backref" href="#id25" role="doc-backlink">Logistic Regression Coefficient (β)</a><a class="headerlink" href="#logistic-regression-coefficient" title="Permalink to this heading">#</a></h2>
+<p>Shows how much change in X affects log-odds of Y.</p>
+<p><strong>Interpretation</strong></p>
+<ul class="simple">
+<li><p>β &gt; 0 → X increases probability of Y=1</p></li>
+<li><p>β &lt; 0 → X reduces probability</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="roc-auc-as-feature-association">
+<h2><a class="toc-backref" href="#id26" role="doc-backlink">ROC-AUC as Feature Association</a><a class="headerlink" href="#roc-auc-as-feature-association" title="Permalink to this heading">#</a></h2>
+<p>Treat continuous X as a classifier for binary Y.</p>
+<div class="math notranslate nohighlight">
+\[
+AUC = P(X_{positive} &gt; X_{negative})
+\]</div>
+<p><strong>Interprets</strong></p>
+<p>How well X separates classes.</p>
+</section>
+<hr class="docutils" />
+<section id="tree-based-feature-importance">
+<h2><a class="toc-backref" href="#id27" role="doc-backlink">Tree-Based Feature Importance</a><a class="headerlink" href="#tree-based-feature-importance" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Gini importance</p></li>
+<li><p>Permutation importance</p></li>
+</ul>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p>Handles nonlinear, interaction effects</p></li>
+<li><p>Works for any X/Y types</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="shap-values">
+<h2><a class="toc-backref" href="#id28" role="doc-backlink">SHAP Values</a><a class="headerlink" href="#shap-values" title="Permalink to this heading">#</a></h2>
+<p>Explains how each value of X pushes prediction ↑ or ↓.</p>
+<p><strong>Advantages</strong></p>
+<ul class="simple">
+<li><p>Model-agnostic</p></li>
+<li><p>Highly interpretable</p></li>
+</ul>
+<hr class="docutils" />
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>X</p></th>
+<th class="head"><p>Y</p></th>
+<th class="head"><p>Best Methods</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Continuous</p></td>
+<td><p>Continuous</p></td>
+<td><p>Pearson, Spearman, Kendall, DistanceCorr, PartialCorr, MI, MIC</p></td>
+</tr>
+<tr class="row-odd"><td><p>Continuous</p></td>
+<td><p>Binary</p></td>
+<td><p>Point-Biserial, t-test, AUC, Logistic β, MI</p></td>
+</tr>
+<tr class="row-even"><td><p>Continuous</p></td>
+<td><p>Ordinal</p></td>
+<td><p>Spearman, Kendall, MI</p></td>
+</tr>
+<tr class="row-odd"><td><p>Continuous</p></td>
+<td><p>Nominal</p></td>
+<td><p>ANOVA, Kruskal–Wallis, MI</p></td>
+</tr>
+<tr class="row-even"><td><p>Continuous</p></td>
+<td><p>Discrete Numeric</p></td>
+<td><p>Pearson, Spearman, Kendall, MI</p></td>
+</tr>
+<tr class="row-odd"><td><p>Discrete</p></td>
+<td><p>Continuous</p></td>
+<td><p>t-test, ANOVA, Kruskal–Wallis, Spearman, MI</p></td>
+</tr>
+<tr class="row-even"><td><p>Discrete</p></td>
+<td><p>Discrete</p></td>
+<td><p>Chi-square, Cramér’s V, Phi, MI</p></td>
+</tr>
+<tr class="row-odd"><td><p>Binary</p></td>
+<td><p>Binary</p></td>
+<td><p>Phi, Chi-square</p></td>
+</tr>
+<tr class="row-even"><td><p>Ordinal</p></td>
+<td><p>Ordinal</p></td>
+<td><p>Spearman, Kendall</p></td>
+</tr>
+<tr class="row-odd"><td><p>Nominal</p></td>
+<td><p>Nominal</p></td>
+<td><p>Chi-square, Cramér’s V</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Click here for Sections<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="01_part.html">Continous X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_part.html#continuous-x-discrete-numeric-y">Continuous X → Discrete Numeric Y</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_part.html">Discrete Numeric X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_part.html">Binary X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_part.html">Ordinal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_part.html">Categorical X</a></li>
+</ul>
+</div>
+</div>
+</details></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./machine_learning\basics\correlation_analysis"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../03_part.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Parametric vs Non-Parametric Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="01_part.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Continous X</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-correlation-analysis-matrix-all-scenarios"><strong>Complete Correlation Analysis Matrix (All Scenarios)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-x-vs-y">Continuous X vs Y</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-numeric-x-vs-y">Discrete Numeric X vs Y</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-x-vs-y">Binary X vs Y</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ordinal-x-vs-y">Ordinal X vs Y</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-nominal-x-vs-y">Categorical (Nominal) X vs Y</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-correlation-methods-continuous-continuous">LINEAR CORRELATION METHODS (Continuous ↔ Continuous)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rank-based-monotonic-methods-ordered-or-nonlinear-monotonic">RANK-BASED / MONOTONIC METHODS (Ordered or Nonlinear Monotonic)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kendall-tau">Kendall Tau (τ)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#categorical-association-methods-discrete-discrete">CATEGORICAL ASSOCIATION METHODS (Discrete ↔ Discrete)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cramers-v">Cramér’s V</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phi-coefficient">Phi Coefficient</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contingency-coefficient">Contingency Coefficient</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-nonlinear-information-based-association-methods"><strong>D. NONLINEAR / INFORMATION-BASED ASSOCIATION METHODS</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distance-correlation">Distance Correlation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mic-maximal-information-coefficient">MIC (Maximal Information Coefficient)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#group-comparison-methods-mixed-data-types">GROUP-COMPARISON METHODS (Mixed Data Types)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advantages"><strong>Advantages</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anova-f-test">ANOVA (F-test)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kruskalwallis-test">Kruskal–Wallis Test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t-test-two-sample-t-test">t-Test (two-sample t-test)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mannwhitney-u-test">Mann–Whitney U Test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-model-based-association-methods">ADVANCED / MODEL-BASED ASSOCIATION METHODS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistic-regression-coefficient">Logistic Regression Coefficient (β)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#roc-auc-as-feature-association">ROC-AUC as Feature Association</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tree-based-feature-importance">Tree-Based Feature Importance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shap-values">SHAP Values</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By svgoudar
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
