@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Hyperparameter Optimization &#8212; Machine Learning Handbook</title>
+    <title>Machine Learning &#8212; Machine Learning Handbook</title>
   
   
   
@@ -68,7 +68,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'machine_learning/basics/01_part';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Bayesian Optimization" href="02_part.html" />
+    <link rel="next" title="Learning approach Variants" href="02_part.html" />
     <link rel="prev" title="Machine Learning" href="../../introduction.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -177,9 +177,21 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Hyperparameter Optimization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02_part.html">Bayesian Optimization</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_part.html">Learning approach Variants</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_part.html">Parametric vs Non-Parametric Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_part.html">Common ML Pitfalls &amp; How to Prevent Them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_part.html">Bayesian Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_part.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="correlation_analysis/overview.html">Correlation Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="correlation_analysis/01_part.html">Continous X</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="correlation_analysis/02_part.html">Discrete Numeric X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation_analysis/03_part.html">Binary X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation_analysis/04_part.html">Ordinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation_analysis/05_part.html">Categorical X</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/Linear_Regression/overview.html">Linear Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Linear_Regression/01_part.html">Overview</a></li>
 
@@ -677,7 +689,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Hyperparameter Optimization</h1>
+    <h1>Machine Learning</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -687,18 +699,27 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-hyperparameter-optimization">Types of Hyperparameter Optimization</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-heuristic-search">Manual / Heuristic Search</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-search">Grid Search</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-search">Random Search</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-optimization">Bayesian Optimization</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evolutionary-genetic-algorithms">Evolutionary / Genetic Algorithms</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperband-and-successive-halving">Hyperband and Successive Halving</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bohb-bayesian-optimization-hyperband">BOHB (Bayesian Optimization + Hyperband)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#population-based-training-pbt">Population-Based Training (PBT)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-based-hyperparameter-optimization">Gradient-Based Hyperparameter Optimization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loss-function">Loss Function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization">Optimization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#underfitting-overfitting">Underfitting / Overfitting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#underfitting">Underfitting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overfitting">Overfitting</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#biasvariance-tradeoff">Bias–Variance Tradeoff</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generalization">Generalization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization">Regularization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-to-understand-ml">Example to Understand ML</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supervised-learning"><strong>Supervised Learning</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unsupervised-learning"><strong>Unsupervised Learning</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#semi-supervised-learning"><strong>Semi-Supervised Learning</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#self-supervised-learning"><strong>Self-Supervised Learning</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reinforcement-learning-rl"><strong>Reinforcement Learning (RL)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#online-learning"><strong>Online Learning</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transfer-learning"><strong>Transfer Learning</strong></a></li>
 </ul>
             </nav>
         </div>
@@ -713,279 +734,466 @@ document.write(`
   <nav class="contents" id="contents" role="doc-toc">
 <p class="topic-title">Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#hyperparameter-optimization" id="id1">Hyperparameter Optimization</a></p>
+<li><p><a class="reference internal" href="#machine-learning" id="id1">Machine Learning</a></p>
 <ul>
-<li><p><a class="reference internal" href="#types-of-hyperparameter-optimization" id="id2">Types of Hyperparameter Optimization</a></p>
+<li><p><a class="reference internal" href="#model" id="id2">Model</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id3">Parameters</a></p></li>
+<li><p><a class="reference internal" href="#hyperparameters" id="id4">Hyperparameters</a></p></li>
+<li><p><a class="reference internal" href="#loss-function" id="id5">Loss Function</a></p></li>
+<li><p><a class="reference internal" href="#optimization" id="id6">Optimization</a></p></li>
+<li><p><a class="reference internal" href="#underfitting-overfitting" id="id7">Underfitting / Overfitting</a></p>
 <ul>
-<li><p><a class="reference internal" href="#manual-heuristic-search" id="id3">Manual / Heuristic Search</a></p></li>
-<li><p><a class="reference internal" href="#grid-search" id="id4">Grid Search</a></p></li>
-<li><p><a class="reference internal" href="#random-search" id="id5">Random Search</a></p></li>
-<li><p><a class="reference internal" href="#bayesian-optimization" id="id6">Bayesian Optimization</a></p></li>
-<li><p><a class="reference internal" href="#evolutionary-genetic-algorithms" id="id7">Evolutionary / Genetic Algorithms</a></p></li>
-<li><p><a class="reference internal" href="#hyperband-and-successive-halving" id="id8">Hyperband and Successive Halving</a></p></li>
-<li><p><a class="reference internal" href="#bohb-bayesian-optimization-hyperband" id="id9">BOHB (Bayesian Optimization + Hyperband)</a></p></li>
-<li><p><a class="reference internal" href="#population-based-training-pbt" id="id10">Population-Based Training (PBT)</a></p></li>
-<li><p><a class="reference internal" href="#gradient-based-hyperparameter-optimization" id="id11">Gradient-Based Hyperparameter Optimization</a></p></li>
+<li><p><a class="reference internal" href="#underfitting" id="id8">Underfitting</a></p></li>
+<li><p><a class="reference internal" href="#overfitting" id="id9">Overfitting</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference internal" href="#biasvariance-tradeoff" id="id10">Bias–Variance Tradeoff</a></p></li>
+<li><p><a class="reference internal" href="#generalization" id="id11">Generalization</a></p></li>
+<li><p><a class="reference internal" href="#regularization" id="id12">Regularization</a></p></li>
+<li><p><a class="reference internal" href="#example-to-understand-ml" id="id13">Example to Understand ML</a></p></li>
+<li><p><a class="reference internal" href="#supervised-learning" id="id14"><strong>Supervised Learning</strong></a></p></li>
+<li><p><a class="reference internal" href="#unsupervised-learning" id="id15"><strong>Unsupervised Learning</strong></a></p></li>
+<li><p><a class="reference internal" href="#semi-supervised-learning" id="id16"><strong>Semi-Supervised Learning</strong></a></p></li>
+<li><p><a class="reference internal" href="#self-supervised-learning" id="id17"><strong>Self-Supervised Learning</strong></a></p></li>
+<li><p><a class="reference internal" href="#reinforcement-learning-rl" id="id18"><strong>Reinforcement Learning (RL)</strong></a></p></li>
+<li><p><a class="reference internal" href="#online-learning" id="id19"><strong>Online Learning</strong></a></p></li>
+<li><p><a class="reference internal" href="#transfer-learning" id="id20"><strong>Transfer Learning</strong></a></p></li>
 </ul>
 </li>
 </ul>
 </nav>
-<section id="hyperparameter-optimization">
-<h1><a class="toc-backref" href="#id1" role="doc-backlink">Hyperparameter Optimization</a><a class="headerlink" href="#hyperparameter-optimization" title="Permalink to this heading">#</a></h1>
-<p><strong>Hyperparameter Optimization</strong> (HPO) is the process of finding the <strong>best hyperparameter values</strong> for a machine learning model to maximize performance.</p>
-<p>Hyperparameters are settings <strong>chosen before training</strong>, such as:</p>
+<section id="machine-learning">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Machine Learning</a><a class="headerlink" href="#machine-learning" title="Permalink to this heading">#</a></h1>
+<p>Machine Learning is a <strong>subset of Artificial Intelligence (AI)</strong> that focuses on teaching computers to <strong>learn patterns from data</strong> and <strong>make predictions or decisions</strong> without being explicitly programmed with fixed rules.</p>
+<section id="model">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Model</a><a class="headerlink" href="#model" title="Permalink to this heading">#</a></h2>
+<p>A <strong>model</strong> is the mathematical function that learns patterns from data and predicts outputs for new inputs.</p>
 <ul class="simple">
+<li><p>It represents the relationship between inputs (x) and outputs (y).</p></li>
+<li><p>Training shapes the model into a function (y = f_\theta(x)).</p></li>
+<li><p>The term “model” may refer to:</p>
+<ul>
+<li><p>the model type (e.g., linear regression),</p></li>
+<li><p>the model architecture (e.g., number of layers),</p></li>
+<li><p>or the final trained model used for predictions.</p></li>
+</ul>
+</li>
+<li><p>More parameters → higher capacity → can learn more complex patterns.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="parameters">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
+<p>Parameters are the <strong>internal values</strong> the model learns during training.</p>
+<ul class="simple">
+<li><p>They define the exact behavior of the model.</p></li>
+<li><p>Examples:</p>
+<ul>
+<li><p>(\theta_0, \theta_1) in linear regression</p></li>
+<li><p>Weights and biases in neural networks</p></li>
+</ul>
+</li>
+<li><p>These values are updated by the optimization algorithm.</p></li>
+</ul>
+<p>Simply: <strong>parameters = learned values</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="hyperparameters">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Hyperparameters</a><a class="headerlink" href="#hyperparameters" title="Permalink to this heading">#</a></h2>
+<p>Hyperparameters are <strong>settings chosen before training</strong> that control how the model learns.</p>
+<ul class="simple">
+<li><p>They are <em>not</em> learned by the model.</p></li>
+<li><p>Examples:</p>
+<ul>
 <li><p>Learning rate</p></li>
 <li><p>Number of layers</p></li>
 <li><p>Batch size</p></li>
-<li><p>Regularization strength</p></li>
-<li><p>Number of trees (XGBoost, Random Forest)</p></li>
+<li><p>Dropout rate</p></li>
+<li><p>Regularization strength (\lambda)</p></li>
 </ul>
-<p>Goal of HPO:
-$<span class="math notranslate nohighlight">\(
-\lambda^* = \arg\min_\lambda ; \mathcal{L}_{\text{val}}(\lambda)
-\)</span>$</p>
-<p>Where <span class="math notranslate nohighlight">\(\lambda\)</span> = set of hyperparameters.</p>
-<p>HPO ensures the model achieves:</p>
-<ul class="simple">
-<li><p>highest accuracy</p></li>
-<li><p>lowest error</p></li>
-<li><p>best generalization</p></li>
+</li>
+<li><p>Choosing the right hyperparameters is called <strong>hyperparameter tuning</strong>.</p></li>
 </ul>
-<hr class="docutils" />
-<section id="types-of-hyperparameter-optimization">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Types of Hyperparameter Optimization</a><a class="headerlink" href="#types-of-hyperparameter-optimization" title="Permalink to this heading">#</a></h2>
-<p>Below are the <strong>main methods</strong>, from simplest to most advanced.</p>
-<hr class="docutils" />
-<section id="manual-heuristic-search">
-<h3><a class="toc-backref" href="#id3" role="doc-backlink">Manual / Heuristic Search</a><a class="headerlink" href="#manual-heuristic-search" title="Permalink to this heading">#</a></h3>
-<p>Tuning based on experience, intuition, or trial-and-error.</p>
-<p><strong>Pros</strong></p>
-<ul class="simple">
-<li><p>Simple</p></li>
-<li><p>Works for small models</p></li>
-</ul>
-<p><strong>Cons</strong></p>
-<ul class="simple">
-<li><p>Not systematic</p></li>
-<li><p>Not scalable</p></li>
-</ul>
+<p>Simply: <strong>hyperparameters = knobs that control training</strong>.</p>
 </section>
 <hr class="docutils" />
-<section id="grid-search">
-<h3><a class="toc-backref" href="#id4" role="doc-backlink">Grid Search</a><a class="headerlink" href="#grid-search" title="Permalink to this heading">#</a></h3>
-<p>Tests <strong>all possible combinations</strong> of hyperparameter values.</p>
-<p><strong>Example</strong></p>
-<p>Learning rate = {0.01, 0.1}
-Batch size = {32, 64}</p>
-<p>Total = 4 combinations.</p>
-<p><strong>Pros</strong></p>
+<section id="loss-function">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Loss Function</a><a class="headerlink" href="#loss-function" title="Permalink to this heading">#</a></h2>
+<p>The loss function measures <strong>how wrong</strong> the model’s predictions are.</p>
 <ul class="simple">
-<li><p>Exhaustive</p></li>
-<li><p>Easy to implement</p></li>
+<li><p>Training tries to minimize this value.</p></li>
+<li><p>It compares predictions vs. ground truth and returns a single number.</p></li>
+<li><p>Examples:</p>
+<ul>
+<li><p>MSE for regression</p></li>
+<li><p>Cross-entropy for classification</p></li>
 </ul>
-<p><strong>Cons</strong></p>
-<ul class="simple">
-<li><p>Very slow</p></li>
-<li><p>Not efficient in high dimensions</p></li>
-<li><p>Many combinations are wasted</p></li>
+</li>
+<li><p>Sometimes a simpler <strong>surrogate loss</strong> (e.g., cross-entropy) is used instead of the true task loss (e.g., accuracy).</p></li>
 </ul>
+<p>Simply: <strong>loss tells the optimizer what direction to improve</strong>.</p>
 </section>
 <hr class="docutils" />
-<section id="random-search">
-<h3><a class="toc-backref" href="#id5" role="doc-backlink">Random Search</a><a class="headerlink" href="#random-search" title="Permalink to this heading">#</a></h3>
-<p>Randomly samples combinations of hyperparameters.</p>
-<p><strong>Pros</strong></p>
+<section id="optimization">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Optimization</a><a class="headerlink" href="#optimization" title="Permalink to this heading">#</a></h2>
+<p>Optimization is the process of adjusting parameters to <strong>minimize the loss</strong>.</p>
 <ul class="simple">
-<li><p>Much more efficient than grid search</p></li>
-<li><p>Performs well in high-dimensional spaces</p></li>
-<li><p>Proven effective for neural networks</p></li>
+<li><p>Gradient Descent and its variants (SGD, Adam, RMSProp) are the standard methods.</p></li>
+<li><p>The optimizer updates parameters using the gradient of the loss.</p></li>
+<li><p>The <strong>learning rate</strong> controls how big each update step is.</p></li>
 </ul>
-<p><strong>Cons</strong></p>
-<ul class="simple">
-<li><p>Still blind sampling</p></li>
-<li><p>No learning from past evaluations</p></li>
-</ul>
+<p>Simply: <strong>optimization = algorithmic process that learns the best parameters</strong>.</p>
 </section>
 <hr class="docutils" />
-<section id="bayesian-optimization">
-<h3><a class="toc-backref" href="#id6" role="doc-backlink">Bayesian Optimization</a><a class="headerlink" href="#bayesian-optimization" title="Permalink to this heading">#</a></h3>
-<p>A <strong>smart</strong>, probabilistic method for HPO.</p>
-<p>It uses:</p>
+<section id="underfitting-overfitting">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Underfitting / Overfitting</a><a class="headerlink" href="#underfitting-overfitting" title="Permalink to this heading">#</a></h2>
+<p>These describe whether the model is too simple or too complex compared to the data.</p>
+<section id="underfitting">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Underfitting</a><a class="headerlink" href="#underfitting" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Gaussian Process (GP)</strong> or other surrogate model</p></li>
-<li><p><strong>Acquisition function</strong> to choose best next hyperparameter</p></li>
-</ul>
-<p><strong>Pros</strong></p>
-<ul class="simple">
-<li><p>Sample efficient</p></li>
-<li><p>Good for expensive training (deep models)</p></li>
-<li><p>Learns from previous trials</p></li>
-</ul>
-<p><strong>Cons</strong></p>
-<ul class="simple">
-<li><p>Slower in high dimensions (&gt; 50D)</p></li>
-<li><p>Requires probabilistic modeling</p></li>
+<li><p>Model is too simple → cannot capture patterns.</p></li>
+<li><p>High training error and high test error.</p></li>
 </ul>
 </section>
-<hr class="docutils" />
-<section id="evolutionary-genetic-algorithms">
-<h3><a class="toc-backref" href="#id7" role="doc-backlink">Evolutionary / Genetic Algorithms</a><a class="headerlink" href="#evolutionary-genetic-algorithms" title="Permalink to this heading">#</a></h3>
-<p>Use ideas from evolution:</p>
+<section id="overfitting">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Overfitting</a><a class="headerlink" href="#overfitting" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>mutation</p></li>
-<li><p>crossover</p></li>
-<li><p>selection</p></li>
+<li><p>Model is too complex → memorizes noise in training data.</p></li>
+<li><p>Low training error but high test error.</p></li>
 </ul>
-<p>Useful for:</p>
+<p>Simply:</p>
 <ul class="simple">
-<li><p>Neural architecture search</p></li>
-<li><p>Very large search spaces</p></li>
-<li><p>Non-differentiable objectives</p></li>
-</ul>
-<p><strong>Pros</strong></p>
-<ul class="simple">
-<li><p>No gradients needed</p></li>
-<li><p>Good for complex search spaces</p></li>
-</ul>
-<p><strong>Cons</strong></p>
-<ul class="simple">
-<li><p>Computationally expensive</p></li>
+<li><p><strong>Underfitting = too simple</strong></p></li>
+<li><p><strong>Overfitting = too complex</strong></p></li>
 </ul>
 </section>
-<hr class="docutils" />
-<section id="hyperband-and-successive-halving">
-<h3><a class="toc-backref" href="#id8" role="doc-backlink">Hyperband and Successive Halving</a><a class="headerlink" href="#hyperband-and-successive-halving" title="Permalink to this heading">#</a></h3>
-<p>Resource-efficient methods.</p>
-<p>Hyperband:</p>
-<ul class="simple">
-<li><p>Quickly eliminates poor hyperparameters</p></li>
-<li><p>Allocates more resources to promising ones</p></li>
-</ul>
-<p><strong>Pros</strong></p>
-<ul class="simple">
-<li><p>Efficient</p></li>
-<li><p>Ideal for deep learning</p></li>
-</ul>
-<p><strong>Cons</strong></p>
-<ul class="simple">
-<li><p>Requires careful resource budgeting (epochs, steps)</p></li>
-</ul>
 </section>
 <hr class="docutils" />
-<section id="bohb-bayesian-optimization-hyperband">
-<h3><a class="toc-backref" href="#id9" role="doc-backlink">BOHB (Bayesian Optimization + Hyperband)</a><a class="headerlink" href="#bohb-bayesian-optimization-hyperband" title="Permalink to this heading">#</a></h3>
-<p>Combines:</p>
+<section id="biasvariance-tradeoff">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Bias–Variance Tradeoff</a><a class="headerlink" href="#biasvariance-tradeoff" title="Permalink to this heading">#</a></h2>
+<p>This explains how model complexity affects errors.</p>
 <ul class="simple">
-<li><p>Bayesian optimization (accuracy)</p></li>
-<li><p>Hyperband (efficiency)</p></li>
+<li><p><strong>Bias</strong> = error from wrong assumptions (model too simple).</p></li>
+<li><p><strong>Variance</strong> = error from being too sensitive to training data (model too complex).</p></li>
 </ul>
-<p>One of the most effective modern methods.</p>
+<p>Generalization error ≈ bias² + variance + irreducible noise.</p>
+<ul class="simple">
+<li><p>Reducing bias → increases variance</p></li>
+<li><p>Reducing variance → increases bias</p></li>
+<li><p>The goal is the <strong>sweet spot</strong> between the two.</p></li>
+</ul>
+<p>Simply: <strong>balance simplicity and flexibility for best performance</strong>.</p>
 </section>
 <hr class="docutils" />
-<section id="population-based-training-pbt">
-<h3><a class="toc-backref" href="#id10" role="doc-backlink">Population-Based Training (PBT)</a><a class="headerlink" href="#population-based-training-pbt" title="Permalink to this heading">#</a></h3>
-<p>Used in reinforcement learning (DeepMind) and deep learning.</p>
+<section id="generalization">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Generalization</a><a class="headerlink" href="#generalization" title="Permalink to this heading">#</a></h2>
+<p>Generalization is the model’s ability to perform well on <strong>unseen data</strong>.</p>
 <ul class="simple">
-<li><p>Models train in parallel</p></li>
-<li><p>Periodically exchange weights and hyperparameters</p></li>
-<li><p>Hyperparameters evolve during training</p></li>
+<li><p>Good training performance is not enough; test performance matters.</p></li>
+<li><p>Generalization error = performance on new data.</p></li>
+<li><p>ML’s primary goal is good generalization, not just memorization.</p></li>
 </ul>
+<p>Simply: <strong>generalization = how well the model works on new data</strong>.</p>
 </section>
 <hr class="docutils" />
-<section id="gradient-based-hyperparameter-optimization">
-<h3><a class="toc-backref" href="#id11" role="doc-backlink">Gradient-Based Hyperparameter Optimization</a><a class="headerlink" href="#gradient-based-hyperparameter-optimization" title="Permalink to this heading">#</a></h3>
-<p>Uses gradients to optimize hyperparameters directly (rare but emerging).</p>
-<p>Applied in:</p>
+<section id="regularization">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Regularization</a><a class="headerlink" href="#regularization" title="Permalink to this heading">#</a></h2>
+<p>Regularization includes techniques that reduce overfitting and improve generalization by <strong>restricting model complexity</strong>.</p>
 <ul class="simple">
-<li><p>Meta-learning</p></li>
-<li><p>Neural architecture search</p></li>
+<li><p>Works by adding a penalty to the loss for large weights:</p>
+<ul>
+<li><p><strong>L2 (weight decay)</strong> → penalty on squared weights</p></li>
+<li><p><strong>L1</strong> → penalty on absolute weights</p></li>
+</ul>
+</li>
+<li><p>Other techniques:</p>
+<ul>
+<li><p><strong>Dropout</strong></p></li>
+<li><p><strong>Early stopping</strong></p></li>
+<li><p><strong>Data augmentation</strong></p></li>
+</ul>
+</li>
+<li><p>Controlled by a hyperparameter like (\lambda).</p></li>
+</ul>
+<p>Simply: <strong>regularization makes the model simpler and prevents overfitting</strong>.</p>
+<hr class="docutils" />
+</section>
+<hr class="docutils" />
+<section id="example-to-understand-ml">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Example to Understand ML</a><a class="headerlink" href="#example-to-understand-ml" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Traditional programming:</p>
+<ul>
+<li><p>Rules (explicitly coded) + Data → Output</p></li>
+</ul>
+</li>
+<li><p>Machine Learning:</p>
+<ul>
+<li><p>Data + Output (examples) → Algorithm learns rules → Predict new output</p></li>
+</ul>
+</li>
+</ul>
+<p>✨ Example: Predicting house prices</p>
+<ul>
+<li><p>Input: Size, Location, Number of rooms</p></li>
+<li><p>Output: House Price</p></li>
+<li><p>ML learns the mapping function:</p>
+<div class="math notranslate nohighlight">
+\[
+  Price = f(Size, Location, Rooms)
+  \]</div>
+</li>
 </ul>
 <hr class="docutils" />
+<p>Below is a <strong>clear, structured explanation</strong> of each ML learning paradigm you listed. These seven categories cover almost all learning types used in practice and interviews.</p>
+</section>
+<hr class="docutils" />
+<section id="supervised-learning">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink"><strong>Supervised Learning</strong></a><a class="headerlink" href="#supervised-learning" title="Permalink to this heading">#</a></h2>
+<p>Learning from a dataset that contains <strong>input–output pairs</strong>.
+The model learns a function:</p>
+<div class="math notranslate nohighlight">
+\[
+f: X \rightarrow y
+\]</div>
+<p><strong>Goal</strong></p>
+<p>Predict the correct label/value for new inputs.</p>
+<p><strong>Examples</strong></p>
+<ul class="simple">
+<li><p>Classification → spam/not spam</p></li>
+<li><p>Regression → house prices</p></li>
+<li><p>Models → Linear Regression, Random Forests, CNNs, Transformers</p></li>
+</ul>
+<p><strong>Key Idea</strong></p>
+<p>Model learns <strong>with supervision</strong> (labeled data).</p>
+</section>
+<hr class="docutils" />
+<section id="unsupervised-learning">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink"><strong>Unsupervised Learning</strong></a><a class="headerlink" href="#unsupervised-learning" title="Permalink to this heading">#</a></h2>
+<p>Learning from data that has <strong>no labels</strong>.
+The model tries to discover <strong>structure, patterns, or groups</strong>.</p>
+<p><strong>Examples</strong></p>
+<ul class="simple">
+<li><p>Clustering (K-Means, DBSCAN)</p></li>
+<li><p>Dimensionality reduction (PCA, t-SNE)</p></li>
+<li><p>Anomaly detection</p></li>
+<li><p>Topic modeling (LDA)</p></li>
+</ul>
+<p><strong>Key Idea</strong></p>
+<p>Model learns <strong>without supervision</strong>, finding hidden structure.</p>
+</section>
+<hr class="docutils" />
+<section id="semi-supervised-learning">
+<h2><a class="toc-backref" href="#id16" role="doc-backlink"><strong>Semi-Supervised Learning</strong></a><a class="headerlink" href="#semi-supervised-learning" title="Permalink to this heading">#</a></h2>
+<p>Learning from a mix of:</p>
+<ul class="simple">
+<li><p><strong>a small amount of labeled data</strong>, and</p></li>
+<li><p><strong>a large amount of unlabeled data</strong>.</p></li>
+</ul>
+<p>Useful when labeling data is expensive.</p>
+<p><strong>Examples</strong></p>
+<ul class="simple">
+<li><p>Text classification with few labeled examples</p></li>
+<li><p>Image labeling with only 1% labeled images</p></li>
+<li><p>Algorithms → pseudo-labeling, consistency training</p></li>
+</ul>
+<p><strong>Key Idea</strong></p>
+<p>Use unlabeled data to improve learning accuracy.</p>
+</section>
+<hr class="docutils" />
+<section id="self-supervised-learning">
+<h2><a class="toc-backref" href="#id17" role="doc-backlink"><strong>Self-Supervised Learning</strong></a><a class="headerlink" href="#self-supervised-learning" title="Permalink to this heading">#</a></h2>
+<p><strong>Definition</strong></p>
+<p>A special case of unsupervised learning where the model <strong>creates its own labels</strong> from the data.</p>
+<p>It learns by solving <strong>pretext tasks</strong>, such as predicting a masked part of the input.</p>
+<p><strong>Examples</strong></p>
+<ul class="simple">
+<li><p>Masked Language Modeling (BERT)</p></li>
+<li><p>Next Sentence Prediction</p></li>
+<li><p>Contrastive learning (SimCLR)</p></li>
+<li><p>Masked image modeling (MAE)</p></li>
+</ul>
+<p><strong>Key Idea</strong></p>
+<p>Model generates <strong>internal supervision</strong> from the raw data.
+This is how modern large models (LLMs, vision transformers) are pre-trained.</p>
+</section>
+<hr class="docutils" />
+<section id="reinforcement-learning-rl">
+<h2><a class="toc-backref" href="#id18" role="doc-backlink"><strong>Reinforcement Learning (RL)</strong></a><a class="headerlink" href="#reinforcement-learning-rl" title="Permalink to this heading">#</a></h2>
+<p>Learning by interacting with an environment and receiving <strong>reward or penalty</strong>.</p>
+<p>The agent learns a policy:</p>
+<div class="math notranslate nohighlight">
+\[
+\pi(s) \rightarrow a
+\]</div>
+<p><strong>Goal</strong></p>
+<p>Maximize cumulative reward over time.</p>
+<p><strong>Examples</strong></p>
+<ul class="simple">
+<li><p>Robotics</p></li>
+<li><p>Game playing (Chess, Go, Atari)</p></li>
+<li><p>Recommendation systems</p></li>
+<li><p>Autonomous vehicles</p></li>
+</ul>
+<p><strong>Key Idea</strong></p>
+<p>Learning through <strong>trial and error</strong>, not through labeled data.</p>
+</section>
+<hr class="docutils" />
+<section id="online-learning">
+<h2><a class="toc-backref" href="#id19" role="doc-backlink"><strong>Online Learning</strong></a><a class="headerlink" href="#online-learning" title="Permalink to this heading">#</a></h2>
+<p>Model learns <strong>incrementally</strong> from streaming data, one sample (or mini-batch) at a time.</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_{t+1} = \theta_t - \eta \nabla L(x_t)
+\]</div>
+<p>Used when data arrives continuously or is too large to store.</p>
+<p><strong>Examples</strong></p>
+<ul class="simple">
+<li><p>Fraud detection (transaction by transaction)</p></li>
+<li><p>Real-time anomaly detection</p></li>
+<li><p>Clickstream prediction</p></li>
+<li><p>IoT sensor data</p></li>
+</ul>
+<p><strong>Key Idea</strong></p>
+<p>Training happens <strong>continuously</strong> instead of batch training.</p>
+</section>
+<hr class="docutils" />
+<section id="transfer-learning">
+<h2><a class="toc-backref" href="#id20" role="doc-backlink"><strong>Transfer Learning</strong></a><a class="headerlink" href="#transfer-learning" title="Permalink to this heading">#</a></h2>
+<p>Reusing a model trained on one task/data (source) and <strong>adapting it</strong> to a new, related task (target).</p>
+<p><strong>Two steps</strong></p>
+<ol class="arabic simple">
+<li><p>Pre-train on large dataset</p></li>
+<li><p>Fine-tune on small dataset for new task</p></li>
+</ol>
+<p><strong>Examples</strong></p>
+<ul class="simple">
+<li><p>Using ImageNet-pretrained ResNet for medical images</p></li>
+<li><p>Using BERT/GPT embeddings for text classification</p></li>
+<li><p>Using foundation models (LLMs, CLIP) for custom tasks</p></li>
+</ul>
+<p><strong>Key Idea</strong></p>
+<p>Reuse learned knowledge to reduce data and training cost.</p>
+<hr class="docutils" />
+<p><strong>Key Components of ML</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Dataset</strong> → Collection of examples (features + labels).</p></li>
+<li><p><strong>Model</strong> → Mathematical representation that makes predictions.</p></li>
+<li><p><strong>Training</strong> → Process of learning patterns (adjusting model parameters).</p></li>
+<li><p><strong>Evaluation</strong> → Measuring performance (accuracy, error, etc.).</p></li>
+<li><p><strong>Prediction</strong> → Using the trained model on unseen data.</p></li>
+</ol>
+<hr class="docutils" />
+<p><strong>Why is ML important</strong></p>
+<ul class="simple">
+<li><p>Handles <strong>large, complex data</strong> humans cannot analyze manually.</p></li>
+<li><p><strong>Automates tasks</strong> (spam filtering, recommendation systems, fraud detection).</p></li>
+<li><p>Improves over time as it sees more data.</p></li>
+</ul>
 <p><strong>Summary</strong></p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>Method</p></th>
-<th class="head"><p>Technique</p></th>
-<th class="head"><p>Strength</p></th>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Uses</p></th>
+<th class="head"><p>Key Idea</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Manual</p></td>
-<td><p>Heuristic</p></td>
-<td><p>Simple</p></td>
+<tr class="row-even"><td><p><strong>Supervised</strong></p></td>
+<td><p>Classification, regression</p></td>
+<td><p>Learn from labeled data</p></td>
 </tr>
-<tr class="row-odd"><td><p>Grid Search</p></td>
-<td><p>Exhaustive search</p></td>
-<td><p>Small spaces</p></td>
+<tr class="row-odd"><td><p><strong>Unsupervised</strong></p></td>
+<td><p>Clustering, anomalies</p></td>
+<td><p>Discover structure without labels</p></td>
 </tr>
-<tr class="row-even"><td><p>Random Search</p></td>
-<td><p>Random sampling</p></td>
-<td><p>Efficient</p></td>
+<tr class="row-even"><td><p><strong>Semi-Supervised</strong></p></td>
+<td><p>Low-label tasks</p></td>
+<td><p>Combine labeled + unlabeled data</p></td>
 </tr>
-<tr class="row-odd"><td><p>Bayesian Opt.</p></td>
-<td><p>GP + acquisition</p></td>
-<td><p>Best for expensive models</p></td>
+<tr class="row-odd"><td><p><strong>Self-Supervised</strong></p></td>
+<td><p>Pre-training LLMs, vision models</p></td>
+<td><p>Model generates its own labels</p></td>
 </tr>
-<tr class="row-even"><td><p>Evolutionary</p></td>
-<td><p>Genetic algorithms</p></td>
-<td><p>Large search spaces</p></td>
+<tr class="row-even"><td><p><strong>Reinforcement Learning</strong></p></td>
+<td><p>Games, robotics</p></td>
+<td><p>Learn via reward/penalty</p></td>
 </tr>
-<tr class="row-odd"><td><p>Hyperband</p></td>
-<td><p>Bandit-based</p></td>
-<td><p>Resource-efficient</p></td>
+<tr class="row-odd"><td><p><strong>Online Learning</strong></p></td>
+<td><p>Streaming data</p></td>
+<td><p>Incremental learning</p></td>
 </tr>
-<tr class="row-even"><td><p>BOHB</p></td>
-<td><p>Bayesian + Hyperband</p></td>
-<td><p>State-of-the-art</p></td>
-</tr>
-<tr class="row-odd"><td><p>PBT</p></td>
-<td><p>Evolving hyperparameters</p></td>
-<td><p>RL and deep learning</p></td>
-</tr>
-<tr class="row-even"><td><p>Gradient-based</p></td>
-<td><p>Meta-learning</p></td>
-<td><p>Advanced research</p></td>
+<tr class="row-even"><td><p><strong>Transfer Learning</strong></p></td>
+<td><p>Fine-tuning pre-trained models</p></td>
+<td><p>Reuse knowledge for new tasks</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<hr class="docutils" />
-<p><strong>4. Which Method to Use?</strong></p>
+<p><strong>List of Machine Learning Algorithms</strong></p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>Situation</p></th>
-<th class="head"><p>Best HPO Method</p></th>
+<tr class="row-odd"><th class="head"><p><strong>Category</strong></p></th>
+<th class="head"><p><strong>Sub-type</strong></p></th>
+<th class="head"><p><strong>Algorithms</strong></p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Small dataset</p></td>
-<td><p>Grid / Random</p></td>
+<tr class="row-even"><td><p><strong>Supervised Learning</strong></p></td>
+<td><p><strong>Regression</strong></p></td>
+<td><p>Linear Regression, Polynomial Regression, Ridge, Lasso, Elastic Net, SVR, Decision Tree Regression, Random Forest Regression, Gradient Boosting (XGBoost, LightGBM, CatBoost), kNN Regression, Bayesian Regression, Neural Networks</p></td>
 </tr>
-<tr class="row-odd"><td><p>Medium models</p></td>
-<td><p>Random Search</p></td>
+<tr class="row-odd"><td><p></p></td>
+<td><p><strong>Classification</strong></p></td>
+<td><p>Logistic Regression, kNN, SVM, Decision Trees (CART, ID3, C4.5), Random Forest, Gradient Boosting (XGBoost, LightGBM, CatBoost), Naive Bayes (Gaussian, Multinomial, Bernoulli), Perceptron, Multi-layer Perceptrons, Ensemble Methods (Bagging, Stacking, Voting), Probabilistic Graphical Models (Bayesian Networks, CRFs)</p></td>
 </tr>
-<tr class="row-even"><td><p>Expensive deep learning training</p></td>
-<td><p>Bayesian Optimization</p></td>
+<tr class="row-even"><td><p><strong>Unsupervised Learning</strong></p></td>
+<td><p><strong>Clustering</strong></p></td>
+<td><p>k-Means, Hierarchical Clustering, DBSCAN, OPTICS, Gaussian Mixture Models, Mean-Shift, Spectral Clustering, BIRCH, Affinity Propagation</p></td>
 </tr>
-<tr class="row-odd"><td><p>Very large search spaces</p></td>
-<td><p>Evolutionary Algorithms</p></td>
+<tr class="row-odd"><td><p></p></td>
+<td><p><strong>Dimensionality Reduction</strong></p></td>
+<td><p>PCA, Kernel PCA, ICA, SVD, Factor Analysis, t-SNE, UMAP, Autoencoders</p></td>
 </tr>
-<tr class="row-even"><td><p>Limited compute budget</p></td>
-<td><p>Hyperband / BOHB</p></td>
+<tr class="row-even"><td><p></p></td>
+<td><p><strong>Association Rules</strong></p></td>
+<td><p>Apriori, Eclat, FP-Growth</p></td>
 </tr>
-<tr class="row-odd"><td><p>RL or evolving training</p></td>
-<td><p>Population-Based Training</p></td>
+<tr class="row-odd"><td><p></p></td>
+<td><p><strong>Density Estimation</strong></p></td>
+<td><p>KDE, Expectation-Maximization (EM), Hidden Markov Models (unsupervised setting)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Semi-Supervised Learning</strong></p></td>
+<td><p>—</p></td>
+<td><p>Self-training, Co-training, Label Propagation/Spreading, Semi-supervised SVM, Graph-based methods, Semi-supervised Deep Learning (Consistency Regularization, Pseudo-labeling)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Reinforcement Learning</strong></p></td>
+<td><p><strong>Value-based</strong></p></td>
+<td><p>Q-Learning, SARSA, Deep Q-Networks (DQN)</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><strong>Policy-based</strong></p></td>
+<td><p>Policy Gradient (REINFORCE), Actor–Critic (A2C, A3C), Proximal Policy Optimization (PPO), Trust Region Policy Optimization (TRPO)</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><strong>Model-based / Advanced</strong></p></td>
+<td><p>DDPG, TD3, SAC, Monte Carlo Tree Search, Multi-agent RL</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Other Methods</strong></p></td>
+<td><p><strong>Ensemble Methods</strong></p></td>
+<td><p>Bagging, Boosting (AdaBoost, Gradient Boosting, XGBoost, LightGBM, CatBoost), Stacking, Blending, Voting Classifier</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><strong>Probabilistic / Bayesian</strong></p></td>
+<td><p>Naive Bayes, Bayesian Networks, Gaussian Processes, HMMs, Markov Random Fields</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><strong>Deep Learning</strong></p></td>
+<td><p>Feedforward NN, CNN, RNN, LSTM, GRU, Transformers (BERT, GPT), Variational Autoencoders (VAE), Generative Adversarial Networks (GANs)</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<hr class="docutils" />
-<p><strong>Summary</strong></p>
-<p>Hyperparameter Optimization is the process of <strong>systematically searching for the best hyperparameters</strong> to maximize model performance, using methods such as grid search, random search, Bayesian optimization, evolutionary algorithms, and Hyperband.</p>
-</section>
 </section>
 </section>
 
@@ -1033,7 +1241,7 @@ Batch size = {32, 64}</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Bayesian Optimization</p>
+        <p class="prev-next-title">Learning approach Variants</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1053,18 +1261,27 @@ Batch size = {32, 64}</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-hyperparameter-optimization">Types of Hyperparameter Optimization</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-heuristic-search">Manual / Heuristic Search</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-search">Grid Search</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-search">Random Search</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-optimization">Bayesian Optimization</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evolutionary-genetic-algorithms">Evolutionary / Genetic Algorithms</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperband-and-successive-halving">Hyperband and Successive Halving</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bohb-bayesian-optimization-hyperband">BOHB (Bayesian Optimization + Hyperband)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#population-based-training-pbt">Population-Based Training (PBT)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-based-hyperparameter-optimization">Gradient-Based Hyperparameter Optimization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameters">Hyperparameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loss-function">Loss Function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization">Optimization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#underfitting-overfitting">Underfitting / Overfitting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#underfitting">Underfitting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overfitting">Overfitting</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#biasvariance-tradeoff">Bias–Variance Tradeoff</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generalization">Generalization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization">Regularization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-to-understand-ml">Example to Understand ML</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supervised-learning"><strong>Supervised Learning</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unsupervised-learning"><strong>Unsupervised Learning</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#semi-supervised-learning"><strong>Semi-Supervised Learning</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#self-supervised-learning"><strong>Self-Supervised Learning</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reinforcement-learning-rl"><strong>Reinforcement Learning (RL)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#online-learning"><strong>Online Learning</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transfer-learning"><strong>Transfer Learning</strong></a></li>
 </ul>
   </nav></div>
 

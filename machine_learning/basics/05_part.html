@@ -1,0 +1,1488 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Bayesian Optimization &#8212; Machine Learning Handbook</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"N": "\\mathbb{N}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'machine_learning/basics/05_part';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Hyperparameter Optimization" href="06_part.html" />
+    <link rel="prev" title="Common ML Pitfalls &amp; How to Prevent Them" href="04_part.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../introduction.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Machine Learning Handbook - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Machine Learning Handbook - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../introduction.html">
+                    Machine Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_part.html">Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_part.html">Learning approach Variants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_part.html">Parametric vs Non-Parametric Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_part.html">Common ML Pitfalls &amp; How to Prevent Them</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Bayesian Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_part.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="correlation_analysis/overview.html">Correlation Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="correlation_analysis/01_part.html">Continous X</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="correlation_analysis/02_part.html">Discrete Numeric X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation_analysis/03_part.html">Binary X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation_analysis/04_part.html">Ordinal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="correlation_analysis/05_part.html">Categorical X</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/Linear_Regression/overview.html">Linear Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Linear_Regression/01_part.html">Overview</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Linear_Regression/02_part.html">Gradient Descent</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Linear_Regression/03_part.html">Convergence Algorithm</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Linear_Regression/04_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Linear_Regression/05_part.html">Multiple Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Linear_Regression/06_part.html">Polynomial Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Linear_Regression/07_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Linear_Regression/08_part.html">OLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Linear_Regression/09_part.html">Bias–Variance Tradeoff</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../supervised_learning/Linear_Regression/Hyperparameter_Tuning/overview.html">Hyperparameter Tuning in Linear Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Linear_Regression/Hyperparameter_Tuning/01_part.html">Regularization &amp; Generalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Linear_Regression/Hyperparameter_Tuning/02_part.html">Lasso Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Linear_Regression/Hyperparameter_Tuning/03_part.html">Ridge Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Linear_Regression/Hyperparameter_Tuning/04_part.html">Elastic Net Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Linear_Regression/Hyperparameter_Tuning/05_part.html">Workflow of Regularized Regression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Linear_Regression/Hyperparameter_Tuning/06_part.html">Cross-Validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Linear_Regression/Hyperparameter_Tuning/07_part.html">Hyperparameter Tuning methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Linear_Regression/Hyperparameter_Tuning/08_part.html">Handle Overfitting</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/Logistic_Regression/overview.html">Logistic Regression</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Logistic_Regression/01_part.html">Assumtpions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Logistic_Regression/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Logistic_Regression/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Logistic_Regression/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Logistic_Regression/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Logistic_Regression/06_part.html">One-vs-Rest (OVR) Logistic Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Logistic_Regression/07_part.html">Handling Imabalance dataset</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../supervised_learning/Logistic_Regression/HyperParameter_Tuning/overview.html">Hyperparameter Tuning</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Logistic_Regression/HyperParameter_Tuning/01_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Logistic_Regression/HyperParameter_Tuning/02_part.html">Cross Validation</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/overview.html">SVM</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/SVR/overview.html">SVR</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/SVR/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/SVR/02_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/SVR/03_part.html">Hyper-Parameter Intiution</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/SVC/overview.html">SVC</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/SVC/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/SVC/02_part.html">Evaluation Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/SVC/03_part.html">Hyper-paramter Tuning Intiution</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/01_part.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/02_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/03_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Support_Vector_Machine/05_part.html">Kernels</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/Naive_Bayes/overview.html">Naive Bayes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Naive_Bayes/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Naive_Bayes/02_part.html">Intuition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Naive_Bayes/03_part.html">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Naive_Bayes/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Naive_Bayes/05_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Naive_Bayes/06_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Naive_Bayes/07_part.html">Variants of NB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Naive_Bayes/08_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/KNN/overview.html">K-Nearest Neighbors (KNN)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/KNN/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/KNN/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/KNN/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/KNN/04_part.html">How to select cluster <span class="math notranslate nohighlight">\(k\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/KNN/05_part.html">KNN Variants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/KNN/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/KNN/07_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/KNN/08_part.html">Hyperparameter Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/KNN/09_part.html">Regression &amp; Classification</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/Decision_Tree/overview.html">Decision Tree</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../supervised_learning/Decision_Tree/DTR/overview.html">Decision Tree Regressor</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Decision_Tree/DTR/01_part.html">Cost Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Decision_Tree/DTR/02_part.html">Performance Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Decision_Tree/DTR/03_part.html">Hyperparameter tuning</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../supervised_learning/Decision_Tree/DTC/overview.html">Decision Tree Classifier</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Decision_Tree/DTC/01_part.html">Cost Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Decision_Tree/DTC/02_part.html">Performance Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Decision_Tree/DTC/03_part.html">Hyperparameters Tuning</a></li>
+
+
+
+<li class="toctree-l3"><a class="reference internal" href="../supervised_learning/Decision_Tree/DTC/04_part.html">Handle Underfitting/Overfitting</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Decision_Tree/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Decision_Tree/02_part.html">Purity Measures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Decision_Tree/03_part.html">Hyperparameter Tuning in Decision Tree</a></li>
+
+
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/Random_Forest/overview.html">Random Forest</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Random_Forest/01_part.html">Ensembling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Random_Forest/02_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Random_Forest/03_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Random_Forest/04_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Random_Forest/05_part.html">Out-of-Bag (OOB) Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Random_Forest/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Random_Forest/07_part.html">Hyperparameter Tuning</a></li>
+
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/AdaBoost/overview.html">AdaBoost (Adaptive Boosting)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/AdaBoost/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/AdaBoost/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/AdaBoost/03_part.html"><strong>Workflow</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/AdaBoost/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/AdaBoost/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/AdaBoost/06_part.html">AdaBoost Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/AdaBoost/07_part.html">Hyperparameter Tuning</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/AdaBoost/08_part.html">AdaBoost Classifier</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/Gradient_boosting/overview.html">Gradient Boosting</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Gradient_boosting/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Gradient_boosting/02_part.html">Intuition</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Gradient_boosting/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Gradient_boosting/04_part.html">Gradient Boosting Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Gradient_boosting/05_part.html">Gradient Boosting Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Gradient_boosting/06_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/Gradient_boosting/07_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supervised_learning/XGBoost/overview.html">XGBoost</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/XGBoost/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/XGBoost/02_part.html">Intiution</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/XGBoost/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/XGBoost/04_part.html">XGBoost Regressor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/XGBoost/05_part.html">XGBoost Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/XGBoost/06_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/XGBoost/07_part.html">Performance metrics</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../supervised_learning/XGBoost/08_part.html">HyperParameter Tuning</a></li>
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised_learning/K_Means/overview.html">K-Means Clustering</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/K_Means/01_part.html"><strong>Assumptions</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/K_Means/02_part.html">Intuition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/K_Means/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/K_Means/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/K_Means/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/K_Means/06_part.html">Hyperparameter tuning</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/K_Means/07_part.html">K-Means from scratch</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised_learning/Hierarchical_Clustering/overview.html">Hierarchical Clustering</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/Hierarchical_Clustering/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/Hierarchical_Clustering/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/Hierarchical_Clustering/03_part.html">Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/Hierarchical_Clustering/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/Hierarchical_Clustering/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/Hierarchical_Clustering/06_part.html">Hyperparameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised_learning/PCA/overview.html">PCA</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/PCA/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/PCA/02_part.html">Intiutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/PCA/03_part.html"><strong>Workflows</strong></a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/PCA/04_part.html">Hyperparameter Tuning</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised_learning/T_SNE/overview.html">t-SNE</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/T_SNE/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/T_SNE/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/T_SNE/03_part.html">Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/T_SNE/04_part.html">Cost Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/T_SNE/05_part.html">Hyper Parameter Tuning</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised_learning/DBSCAN/overview.html">DBSCAN</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/DBSCAN/01_part.html">Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/DBSCAN/02_part.html">Intiution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/DBSCAN/03_part.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/DBSCAN/04_part.html">Cost Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/DBSCAN/05_part.html">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/DBSCAN/06_part.html">Hyperparameter Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/DBSCAN/07_part.html">Problem Statement</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/DBSCAN/08_part.html">Silhouette Clustering</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised_learning/Anamoly_Detection/overview.html">Anamoly Detection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/Anamoly_Detection/01_part.html">Isolation Forest</a></li>
+
+
+
+
+
+
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised_learning/Anamoly_Detection/02_part.html">Local Outlier Factor</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../NLP/overview.html">NLP</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../NLP/01_part.html">NLP Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NLP/02_part.html">Terminologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NLP/03_part.html">Part-of-Speech (POS)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../NLP/04_part.html">Sentiment Analysis</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../NLP/Text_Pre_Processor/overview.html">Text Preprocessing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Text_Pre_Processor/01_part.html">Tokenization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Text_Pre_Processor/02_part.html">Stopwords</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Text_Pre_Processor/03_part.html">Stemming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Text_Pre_Processor/04_part.html">Lemmatization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Text_Pre_Processor/05_part.html">Handle Numbers in NLP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Text_Pre_Processor/06_part.html">Handle Emojis &amp; Emoticons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Text_Pre_Processor/07_part.html">Spelling Corrections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Text_Pre_Processor/08_part.html">Text Normalization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../NLP/Vectorization/overview.html">Vectorization</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Vectorization/01_part.html">Bag of Words (BoW)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Vectorization/02_part.html">TF (Term Frequency)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Vectorization/03_part.html">TF-IDF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../NLP/Vectorization/04_part.html">Word Embeddings</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/svgoudar/AI-ML-Essentials/blob/master/machine_learning/basics/05_part.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/svgoudar/AI-ML-Essentials" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/svgoudar/AI-ML-Essentials/issues/new?title=Issue%20on%20page%20%2Fmachine_learning/basics/05_part.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/machine_learning/basics/05_part.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Bayesian Optimization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuition"><strong>1. Intuition</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-simple-step-by-step"><strong>2. Workflow (Simple Step-by-Step)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-initialize"><strong>Step 1: Initialize</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-fit-a-surrogate-model"><strong>Step 2: Fit a Surrogate Model</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-use-acquisition-function"><strong>Step 3: Use Acquisition Function</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-evaluate-the-true-function"><strong>Step 4: Evaluate the True Function</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-update-model"><strong>Step 5: Update Model</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-iterate"><strong>Step 6: Iterate</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-process-gp">Gaussian Process (GP)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Intuition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-idea">Core Idea</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-covariance-function">Kernel (Covariance Function)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#squared-exponential-rbf">Squared Exponential (RBF)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matern-kernel"><strong>Matern kernel</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-kernel"><strong>Linear kernel</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-gp-regression-works">How GP Regression Works</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-gp-assumes-joint-gaussian">Step 1: GP assumes joint Gaussian:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-compute-posterior-mean-and-variance">Step 2: Compute posterior mean and variance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-gaussian-processes-are-useful">Why Gaussian Processes Are Useful</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#they-handle-small-datasets-well">They handle small datasets well</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#provide-predictive-uncertainty">Provide predictive uncertainty</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#flexible">Flexible</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-form-bayesian-inference">Closed-form Bayesian inference</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-visual-intuition">Simple Visual Intuition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gp-in-bayesian-optimization">GP in Bayesian Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-gps-fail">When GPs Fail</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acquisition-function">Acquisition Function</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#purpose-of-the-acquisition-function">Purpose of the Acquisition Function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-we-need-it">Why We Need It</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-acquisition-functions">Common Acquisition Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-improvement-ei">Expected Improvement (EI)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-of-improvement-pi">Probability of Improvement (PI)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#upper-confidence-bound-ucb">Upper Confidence Bound (UCB)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lower-confidence-bound-lcb">Lower Confidence Bound (LCB)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-intuition">Visual Intuition</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-acquisition-looks-in-the-optimization-loop">How Acquisition Looks in the Optimization Loop</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step">Step-by-step:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <nav class="contents" id="contents" role="doc-toc">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#bayesian-optimization" id="id2">Bayesian Optimization</a></p>
+<ul>
+<li><p><a class="reference internal" href="#intuition" id="id3"><strong>1. Intuition</strong></a></p></li>
+<li><p><a class="reference internal" href="#workflow-simple-step-by-step" id="id4"><strong>2. Workflow (Simple Step-by-Step)</strong></a></p>
+<ul>
+<li><p><a class="reference internal" href="#step-1-initialize" id="id5"><strong>Step 1: Initialize</strong></a></p></li>
+<li><p><a class="reference internal" href="#step-2-fit-a-surrogate-model" id="id6"><strong>Step 2: Fit a Surrogate Model</strong></a></p></li>
+<li><p><a class="reference internal" href="#step-3-use-acquisition-function" id="id7"><strong>Step 3: Use Acquisition Function</strong></a></p></li>
+<li><p><a class="reference internal" href="#step-4-evaluate-the-true-function" id="id8"><strong>Step 4: Evaluate the True Function</strong></a></p></li>
+<li><p><a class="reference internal" href="#step-5-update-model" id="id9"><strong>Step 5: Update Model</strong></a></p></li>
+<li><p><a class="reference internal" href="#step-6-iterate" id="id10"><strong>Step 6: Iterate</strong></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#gaussian-process-gp" id="id11">Gaussian Process (GP)</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id1" id="id12">Intuition</a></p></li>
+<li><p><a class="reference internal" href="#core-idea" id="id13">Core Idea</a></p></li>
+<li><p><a class="reference internal" href="#kernel-covariance-function" id="id14">Kernel (Covariance Function)</a></p></li>
+<li><p><a class="reference internal" href="#squared-exponential-rbf" id="id15">Squared Exponential (RBF)</a></p></li>
+<li><p><a class="reference internal" href="#matern-kernel" id="id16"><strong>Matern kernel</strong></a></p></li>
+<li><p><a class="reference internal" href="#linear-kernel" id="id17"><strong>Linear kernel</strong></a></p></li>
+<li><p><a class="reference internal" href="#how-gp-regression-works" id="id18">How GP Regression Works</a></p></li>
+<li><p><a class="reference internal" href="#step-1-gp-assumes-joint-gaussian" id="id19">Step 1: GP assumes joint Gaussian:</a></p></li>
+<li><p><a class="reference internal" href="#step-2-compute-posterior-mean-and-variance" id="id20">Step 2: Compute posterior mean and variance</a></p></li>
+<li><p><a class="reference internal" href="#why-gaussian-processes-are-useful" id="id21">Why Gaussian Processes Are Useful</a></p>
+<ul>
+<li><p><a class="reference internal" href="#they-handle-small-datasets-well" id="id22">They handle small datasets well</a></p></li>
+<li><p><a class="reference internal" href="#provide-predictive-uncertainty" id="id23">Provide predictive uncertainty</a></p></li>
+<li><p><a class="reference internal" href="#flexible" id="id24">Flexible</a></p></li>
+<li><p><a class="reference internal" href="#closed-form-bayesian-inference" id="id25">Closed-form Bayesian inference</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#simple-visual-intuition" id="id26">Simple Visual Intuition</a></p></li>
+<li><p><a class="reference internal" href="#gp-in-bayesian-optimization" id="id27">GP in Bayesian Optimization</a></p></li>
+<li><p><a class="reference internal" href="#when-gps-fail" id="id28">When GPs Fail</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#acquisition-function" id="id29">Acquisition Function</a></p>
+<ul>
+<li><p><a class="reference internal" href="#purpose-of-the-acquisition-function" id="id30">Purpose of the Acquisition Function</a></p></li>
+<li><p><a class="reference internal" href="#why-we-need-it" id="id31">Why We Need It</a></p></li>
+<li><p><a class="reference internal" href="#common-acquisition-functions" id="id32">Common Acquisition Functions</a></p>
+<ul>
+<li><p><a class="reference internal" href="#expected-improvement-ei" id="id33">Expected Improvement (EI)</a></p></li>
+<li><p><a class="reference internal" href="#probability-of-improvement-pi" id="id34">Probability of Improvement (PI)</a></p></li>
+<li><p><a class="reference internal" href="#upper-confidence-bound-ucb" id="id35">Upper Confidence Bound (UCB)</a></p></li>
+<li><p><a class="reference internal" href="#lower-confidence-bound-lcb" id="id36">Lower Confidence Bound (LCB)</a></p></li>
+<li><p><a class="reference internal" href="#visual-intuition" id="id37">Visual Intuition</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#how-acquisition-looks-in-the-optimization-loop" id="id38">How Acquisition Looks in the Optimization Loop</a></p>
+<ul>
+<li><p><a class="reference internal" href="#step-by-step" id="id39">Step-by-step:</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="tex2jax_ignore mathjax_ignore" id="bayesian-optimization">
+<h1><a class="toc-backref" href="#id2" role="doc-backlink">Bayesian Optimization</a><a class="headerlink" href="#bayesian-optimization" title="Permalink to this heading">#</a></h1>
+<section id="intuition">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink"><strong>1. Intuition</strong></a><a class="headerlink" href="#intuition" title="Permalink to this heading">#</a></h2>
+<p>Bayesian Optimization is used to find the best value of a function that is:</p>
+<ul class="simple">
+<li><p>Expensive to evaluate</p></li>
+<li><p>Black-box (unknown formula)</p></li>
+<li><p>Noisy</p></li>
+</ul>
+<p>Instead of trying many points blindly, it <strong>builds a model (usually a Gaussian Process)</strong> that estimates:</p>
+<ul class="simple">
+<li><p>What the function might look like (prediction)</p></li>
+<li><p>Where we are uncertain (confidence)</p></li>
+</ul>
+<p>Using this uncertainty, it chooses <strong>the next point that is most promising</strong>, balancing:</p>
+<ul class="simple">
+<li><p><strong>Exploration</strong> (try uncertain areas)</p></li>
+<li><p><strong>Exploitation</strong> (try areas likely to give better results)</p></li>
+</ul>
+<p>This approach finds the optimum in <strong>far fewer evaluations</strong> than grid search or random search.</p>
+</section>
+<hr class="docutils" />
+<section id="workflow-simple-step-by-step">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink"><strong>2. Workflow (Simple Step-by-Step)</strong></a><a class="headerlink" href="#workflow-simple-step-by-step" title="Permalink to this heading">#</a></h2>
+<section id="step-1-initialize">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink"><strong>Step 1: Initialize</strong></a><a class="headerlink" href="#step-1-initialize" title="Permalink to this heading">#</a></h3>
+<p>Pick a small number of random points and evaluate the objective function.
+Example: try 3–5 random hyperparameter values.</p>
+</section>
+<hr class="docutils" />
+<section id="step-2-fit-a-surrogate-model">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink"><strong>Step 2: Fit a Surrogate Model</strong></a><a class="headerlink" href="#step-2-fit-a-surrogate-model" title="Permalink to this heading">#</a></h3>
+<p>Train a <strong>Gaussian Process (GP)</strong> or other surrogate model on observed data.</p>
+<p>GP gives for any point:</p>
+<ul class="simple">
+<li><p>predicted value <span class="math notranslate nohighlight">\(\mu(x)\)</span></p></li>
+<li><p>uncertainty <span class="math notranslate nohighlight">\(\sigma(x)\)</span></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="step-3-use-acquisition-function">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink"><strong>Step 3: Use Acquisition Function</strong></a><a class="headerlink" href="#step-3-use-acquisition-function" title="Permalink to this heading">#</a></h3>
+<p>Acquisition function (EI, PI, UCB) decides where to evaluate next.</p>
+<p>It answers:</p>
+<p><strong>Which point is worth evaluating next based on predicted improvement + uncertainty?</strong></p>
+</section>
+<hr class="docutils" />
+<section id="step-4-evaluate-the-true-function">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink"><strong>Step 4: Evaluate the True Function</strong></a><a class="headerlink" href="#step-4-evaluate-the-true-function" title="Permalink to this heading">#</a></h3>
+<p>Evaluate the chosen point on the real expensive function (e.g., train model with that hyperparameter).</p>
+<p>Add the new (x, f(x)) pair to data.</p>
+</section>
+<hr class="docutils" />
+<section id="step-5-update-model">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink"><strong>Step 5: Update Model</strong></a><a class="headerlink" href="#step-5-update-model" title="Permalink to this heading">#</a></h3>
+<p>Retrain the GP with the updated dataset.</p>
+</section>
+<hr class="docutils" />
+<section id="step-6-iterate">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink"><strong>Step 6: Iterate</strong></a><a class="headerlink" href="#step-6-iterate" title="Permalink to this heading">#</a></h3>
+<p>Repeat Steps 2–5 until:</p>
+<ul class="simple">
+<li><p>budget is exhausted</p></li>
+<li><p>improvement becomes small</p></li>
+<li><p>convergence criteria met</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>One-Line Summary</strong>
+Bayesian Optimization = Smart search that builds a model of the objective function and chooses the next evaluation point using uncertainty + predicted performance, requiring very few total evaluations.</p>
+</section>
+</section>
+<section id="gaussian-process-gp">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Gaussian Process (GP)</a><a class="headerlink" href="#gaussian-process-gp" title="Permalink to this heading">#</a></h2>
+<p>Gaussian Processes are a <strong>probabilistic, non-parametric model</strong> used for regression and Bayesian Optimization.</p>
+<p>They are powerful because they provide:</p>
+<ul class="simple">
+<li><p>a <strong>prediction</strong></p></li>
+<li><p>a <strong>measure of uncertainty</strong></p></li>
+</ul>
+<p>at every point in the input space.</p>
+<hr class="docutils" />
+<section id="id1">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Intuition</a><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>A Gaussian Process is a <strong>distribution over functions</strong>.</p>
+<p>Instead of assuming a function has a fixed form (like linear regression, neural networks), GP assumes:</p>
+<p><strong>Any set of function values follows a joint multivariate Gaussian distribution.</strong></p>
+<p>This means:</p>
+<ul class="simple">
+<li><p>At every point (x), GP predicts a mean ( \mu(x) )</p></li>
+<li><p>And an uncertainty / variance ( \sigma^2(x) )</p></li>
+</ul>
+<p>The model gets <strong>more confident near observed points</strong> and <strong>less confident far away</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="core-idea">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Core Idea</a><a class="headerlink" href="#core-idea" title="Permalink to this heading">#</a></h3>
+<p>A GP is defined by:</p>
+<div class="math notranslate nohighlight">
+\[
+f(x) \sim \mathcal{GP}(m(x), k(x, x'))
+\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(m(x)\)</span>: <strong>mean function</strong> (often 0)</p></li>
+<li><p><span class="math notranslate nohighlight">\(k(x, x')\)</span>: <strong>kernel (covariance) function</strong></p></li>
+</ul>
+<p>The kernel encodes <strong>similarity</strong> between points.</p>
+<p>If two points (x) and (x’) are similar, GP expects their outputs to be correlated.</p>
+</section>
+<hr class="docutils" />
+<section id="kernel-covariance-function">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">Kernel (Covariance Function)</a><a class="headerlink" href="#kernel-covariance-function" title="Permalink to this heading">#</a></h3>
+<p>Most important part.</p>
+<p>Common kernels:</p>
+</section>
+<section id="squared-exponential-rbf">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Squared Exponential (RBF)</a><a class="headerlink" href="#squared-exponential-rbf" title="Permalink to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+k(x,x')=\exp\left(-\frac{(x-x')^2}{2l^2}\right)
+\]</div>
+<ul class="simple">
+<li><p>Smooth</p></li>
+<li><p>Infinite differentiability</p></li>
+<li><p>The most widely used</p></li>
+</ul>
+</section>
+<section id="matern-kernel">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink"><strong>Matern kernel</strong></a><a class="headerlink" href="#matern-kernel" title="Permalink to this heading">#</a></h3>
+<p>Rougher functions; common in real-world optimization.</p>
+</section>
+<section id="linear-kernel">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink"><strong>Linear kernel</strong></a><a class="headerlink" href="#linear-kernel" title="Permalink to this heading">#</a></h3>
+<p>For linear relationships.</p>
+</section>
+<hr class="docutils" />
+<section id="how-gp-regression-works">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">How GP Regression Works</a><a class="headerlink" href="#how-gp-regression-works" title="Permalink to this heading">#</a></h3>
+<p>Given data:</p>
+<div class="math notranslate nohighlight">
+\[
+X = [x_1, x_2, ..., x_n]
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+y = [y_1, y_2, ..., y_n]
+\]</div>
+<p>We want to predict ( f(x_<em>) ) at a new point (x_</em>).</p>
+</section>
+<section id="step-1-gp-assumes-joint-gaussian">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">Step 1: GP assumes joint Gaussian:</a><a class="headerlink" href="#step-1-gp-assumes-joint-gaussian" title="Permalink to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[
+\begin{bmatrix}
+y \
+f(x_*)
+\end{bmatrix}
+\sim \mathcal{N}\left(0,
+\begin{bmatrix}
+K(X,X) + \sigma^2 I &amp; K(X,x_*)\
+K(x_*,X) &amp; K(x_*,x_*)
+\end{bmatrix}
+\right)
+\]</div>
+</section>
+<section id="step-2-compute-posterior-mean-and-variance">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">Step 2: Compute posterior mean and variance</a><a class="headerlink" href="#step-2-compute-posterior-mean-and-variance" title="Permalink to this heading">#</a></h3>
+<p>Mean:</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(x_*) = K(x_*, X)[K(X,X) + \sigma^2 I]^{-1} y
+\]</div>
+<p>Variance:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma^2(x_*) = K(x_*,x_*) - K(x_*, X)[K(X,X) + \sigma^2 I]^{-1}K(X,x_*)
+\]</div>
+<p>Interpretation:</p>
+<ul class="simple">
+<li><p>If <span class="math notranslate nohighlight">\(x_*\)</span> is near training data → low variance</p></li>
+<li><p>Far from training data → high variance</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="why-gaussian-processes-are-useful">
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">Why Gaussian Processes Are Useful</a><a class="headerlink" href="#why-gaussian-processes-are-useful" title="Permalink to this heading">#</a></h3>
+<section id="they-handle-small-datasets-well">
+<h4><a class="toc-backref" href="#id22" role="doc-backlink">They handle small datasets well</a><a class="headerlink" href="#they-handle-small-datasets-well" title="Permalink to this heading">#</a></h4>
+<p>GPs shine with small datasets (10–100 data points).</p>
+</section>
+<section id="provide-predictive-uncertainty">
+<h4><a class="toc-backref" href="#id23" role="doc-backlink">Provide predictive uncertainty</a><a class="headerlink" href="#provide-predictive-uncertainty" title="Permalink to this heading">#</a></h4>
+<p>This uncertainty lets Bayesian Optimization know <strong>where to explore next</strong>.</p>
+</section>
+<section id="flexible">
+<h4><a class="toc-backref" href="#id24" role="doc-backlink">Flexible</a><a class="headerlink" href="#flexible" title="Permalink to this heading">#</a></h4>
+<p>Can model very complex functions via kernel choice.</p>
+</section>
+<section id="closed-form-bayesian-inference">
+<h4><a class="toc-backref" href="#id25" role="doc-backlink">Closed-form Bayesian inference</a><a class="headerlink" href="#closed-form-bayesian-inference" title="Permalink to this heading">#</a></h4>
+<p>GP posterior has exact formulas (unlike neural networks).</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="simple-visual-intuition">
+<h3><a class="toc-backref" href="#id26" role="doc-backlink">Simple Visual Intuition</a><a class="headerlink" href="#simple-visual-intuition" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Grey region: uncertainty</p></li>
+<li><p>Blue curve: GP mean prediction</p></li>
+<li><p>Points: observed data</p></li>
+</ul>
+<p>Notice:</p>
+<ul class="simple">
+<li><p>Certainty is <strong>high near data points</strong></p></li>
+<li><p>Uncertainty <strong>grows between them</strong></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="gp-in-bayesian-optimization">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">GP in Bayesian Optimization</a><a class="headerlink" href="#gp-in-bayesian-optimization" title="Permalink to this heading">#</a></h3>
+<p>GP is the surrogate model.</p>
+<p>For every point (x):</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mu(x)\)</span>: how good this hyperparameter <em>probably</em> is</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma(x)\)</span>: how uncertain we are</p></li>
+</ul>
+<p>Acquisition functions (EI, UCB, PI) use both.</p>
+</section>
+<hr class="docutils" />
+<section id="when-gps-fail">
+<h3><a class="toc-backref" href="#id28" role="doc-backlink">When GPs Fail</a><a class="headerlink" href="#when-gps-fail" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>High dimensionality (&gt; 30 dimensions)</p></li>
+<li><p>Huge datasets (&gt; 10,000 samples)</p></li>
+<li><p>Very noisy data</p></li>
+<li><p>Categorical-heavy spaces</p></li>
+</ul>
+<p>Then alternatives like Random Forest TPE, Gradient Boosted Surrogates, Neural Surrogates, or Bayesian Neural Networks are used.</p>
+<hr class="docutils" />
+<p><strong>Short Summary</strong></p>
+<p><strong>A Gaussian Process is a probability distribution over functions that gives both prediction and uncertainty, making it ideal for problems where every evaluation is expensive, especially Bayesian Optimization.</strong></p>
+</section>
+</section>
+<section id="acquisition-function">
+<h2><a class="toc-backref" href="#id29" role="doc-backlink">Acquisition Function</a><a class="headerlink" href="#acquisition-function" title="Permalink to this heading">#</a></h2>
+<p>In <strong>Bayesian Optimization</strong>, the acquisition function decides <strong>where to sample next</strong> based on:</p>
+<ul class="simple">
+<li><p>The surrogate model’s <strong>prediction</strong> <span class="math notranslate nohighlight">\(\mu(x)\)</span></p></li>
+<li><p>The surrogate model’s <strong>uncertainty</strong> <span class="math notranslate nohighlight">\(\sigma(x)\)</span></p></li>
+</ul>
+<p>It balances:</p>
+<ul class="simple">
+<li><p><strong>Exploitation:</strong> try points that look good</p></li>
+<li><p><strong>Exploration:</strong> try points where the model is uncertain</p></li>
+</ul>
+<p>It directly controls the search efficiency.</p>
+<hr class="docutils" />
+<section id="purpose-of-the-acquisition-function">
+<h3><a class="toc-backref" href="#id30" role="doc-backlink">Purpose of the Acquisition Function</a><a class="headerlink" href="#purpose-of-the-acquisition-function" title="Permalink to this heading">#</a></h3>
+<p>Given the Gaussian Process (GP), for every point (x), we know:</p>
+<ul class="simple">
+<li><p>Mean prediction: <span class="math notranslate nohighlight">\(\mu(x)\)</span></p></li>
+<li><p>Uncertainty: <span class="math notranslate nohighlight">\(\sigma(x)\)</span></p></li>
+</ul>
+<p>The acquisition function <span class="math notranslate nohighlight">\(a(x)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+x_{\text{next}} = \arg\max_x a(x)
+\]</div>
+<p>We evaluate the <em>real, expensive</em> function only at the point with the maximum acquisition value.</p>
+</section>
+<hr class="docutils" />
+<section id="why-we-need-it">
+<h3><a class="toc-backref" href="#id31" role="doc-backlink">Why We Need It</a><a class="headerlink" href="#why-we-need-it" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>GP is only a <strong>model</strong> (a guess).</p></li>
+<li><p>Acquisition function looks at this model and chooses the <strong>most informative next point</strong>.</p></li>
+<li><p>Ensures sample efficiency — fewer costly evaluations.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="common-acquisition-functions">
+<h3><a class="toc-backref" href="#id32" role="doc-backlink">Common Acquisition Functions</a><a class="headerlink" href="#common-acquisition-functions" title="Permalink to this heading">#</a></h3>
+<section id="expected-improvement-ei">
+<h4><a class="toc-backref" href="#id33" role="doc-backlink">Expected Improvement (EI)</a><a class="headerlink" href="#expected-improvement-ei" title="Permalink to this heading">#</a></h4>
+<p>Most widely used.</p>
+<div class="math notranslate nohighlight">
+\[
+EI(x) = (\mu(x) - f_{\text{best}} - \xi)\Phi(Z) + \sigma(x)\phi(Z)
+\]</div>
+<p>Where:</p>
+<div class="math notranslate nohighlight">
+\[
+Z = \frac{\mu(x) - f_{\text{best}} - \xi}{\sigma(x)}
+\]</div>
+<p>Meaning:</p>
+<ul class="simple">
+<li><p>Large if prediction is good (<strong>exploitation</strong>)</p></li>
+<li><p>Large if uncertainty is high (<strong>exploration</strong>)</p></li>
+</ul>
+<p>EI balances both naturally.</p>
+</section>
+<hr class="docutils" />
+<section id="probability-of-improvement-pi">
+<h4><a class="toc-backref" href="#id34" role="doc-backlink">Probability of Improvement (PI)</a><a class="headerlink" href="#probability-of-improvement-pi" title="Permalink to this heading">#</a></h4>
+<div class="math notranslate nohighlight">
+\[
+PI(x) = \Phi\left(\frac{\mu(x) - f_{\text{best}} - \xi}{\sigma(x)}\right)
+\]</div>
+<p>Interpretation:</p>
+<ul class="simple">
+<li><p>Probability this point will give a better result than the current best.</p></li>
+</ul>
+<p>Problem:</p>
+<ul class="simple">
+<li><p>Ignores how <em>much</em> improvement we expect.</p></li>
+<li><p>Tends to over-exploit.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="upper-confidence-bound-ucb">
+<h4><a class="toc-backref" href="#id35" role="doc-backlink">Upper Confidence Bound (UCB)</a><a class="headerlink" href="#upper-confidence-bound-ucb" title="Permalink to this heading">#</a></h4>
+<p>For <strong>minimization</strong>, it’s usually:</p>
+<div class="math notranslate nohighlight">
+\[
+UCB(x) = \mu(x) - \kappa \sigma(x)
+\]</div>
+<p>For <strong>maximization</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+UCB(x) = \mu(x) + \kappa \sigma(x)
+\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\kappa\)</span> controls exploration.</p>
+<p>Meaning:</p>
+<ul class="simple">
+<li><p>Large positive <span class="math notranslate nohighlight">\(\sigma(x)\)</span> → high exploration</p></li>
+<li><p>Low <span class="math notranslate nohighlight">\(\mu(x)\)</span> → high exploitation</p></li>
+</ul>
+<p>Simple and effective.</p>
+</section>
+<hr class="docutils" />
+<section id="lower-confidence-bound-lcb">
+<h4><a class="toc-backref" href="#id36" role="doc-backlink">Lower Confidence Bound (LCB)</a><a class="headerlink" href="#lower-confidence-bound-lcb" title="Permalink to this heading">#</a></h4>
+<p>Used for minimization:</p>
+<div class="math notranslate nohighlight">
+\[
+LCB(x) = \mu(x) - \kappa\sigma(x)
+\]</div>
+<p>Minimize the LCB value.</p>
+</section>
+<hr class="docutils" />
+<section id="visual-intuition">
+<h4><a class="toc-backref" href="#id37" role="doc-backlink">Visual Intuition</a><a class="headerlink" href="#visual-intuition" title="Permalink to this heading">#</a></h4>
+<p>In the plot:</p>
+<ul class="simple">
+<li><p>Blue line = GP mean prediction</p></li>
+<li><p>Shaded region = uncertainty</p></li>
+<li><p>Black dots = observed data</p></li>
+<li><p>Green curve = acquisition score</p></li>
+</ul>
+<p>The <strong>next point</strong> is where the green curve is highest.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="how-acquisition-looks-in-the-optimization-loop">
+<h3><a class="toc-backref" href="#id38" role="doc-backlink">How Acquisition Looks in the Optimization Loop</a><a class="headerlink" href="#how-acquisition-looks-in-the-optimization-loop" title="Permalink to this heading">#</a></h3>
+<section id="step-by-step">
+<h4><a class="toc-backref" href="#id39" role="doc-backlink">Step-by-step:</a><a class="headerlink" href="#step-by-step" title="Permalink to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p>Fit GP on current data</p></li>
+<li><p>For every candidate x:</p>
+<ul class="simple">
+<li><p>compute ( \mu(x) ), ( \sigma(x) )</p></li>
+<li><p>compute acquisition ( a(x) )</p></li>
+</ul>
+</li>
+<li><p>Choose x with maximum ( a(x) )</p></li>
+<li><p>Evaluate real function at x</p></li>
+<li><p>Update data</p></li>
+<li><p>Repeat</p></li>
+</ol>
+<hr class="docutils" />
+<p><strong>One-line Definitions</strong></p>
+<ul class="simple">
+<li><p><strong>Acquisition function = a strategy function that picks the next best point based on predicted performance + uncertainty.</strong></p></li>
+<li><p><strong>It balances exploitation (good predictions) and exploration (high uncertainty).</strong></p></li>
+<li><p><strong>Examples: EI, PI, UCB.</strong></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch_california_housing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">fetch_california_housing</span><span class="p">()</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">target</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="n">n_estimators</span><span class="p">,</span> <span class="n">max_depth</span> <span class="o">=</span> <span class="n">params</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">n_estimators</span><span class="p">),</span>
+        <span class="n">max_depth</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">max_depth</span><span class="p">),</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+    <span class="p">)</span>
+    
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">rmse</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">rmse</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">skopt</span><span class="w"> </span><span class="kn">import</span> <span class="n">gp_minimize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skopt.space</span><span class="w"> </span><span class="kn">import</span> <span class="n">Integer</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">gp_minimize</span><span class="p">(</span>
+    <span class="n">func</span><span class="o">=</span><span class="n">objective</span><span class="p">,</span>                      <span class="c1"># function to minimize</span>
+    <span class="n">dimensions</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Integer</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>                <span class="c1"># n_estimators</span>
+        <span class="n">Integer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>                   <span class="c1"># max_depth</span>
+    <span class="p">],</span>
+    <span class="n">n_calls</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>                          <span class="c1"># total iterations</span>
+    <span class="n">n_initial_points</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>                  <span class="c1"># random warmup</span>
+    <span class="n">acq_func</span><span class="o">=</span><span class="s2">&quot;EI&quot;</span>                        <span class="c1"># Expected Improvement</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\sangouda\Python3.10\lib\site-packages\skopt\optimizer\optimizer.py:517: UserWarning: The objective has been evaluated at point [np.int64(300), np.int64(20)] before, using random point [np.int64(223), np.int64(16)]
+  warnings.warn(
+c:\Users\sangouda\Python3.10\lib\site-packages\skopt\optimizer\optimizer.py:517: UserWarning: The objective has been evaluated at point [np.int64(300), np.int64(20)] before, using random point [np.int64(121), np.int64(13)]
+  warnings.warn(
+c:\Users\sangouda\Python3.10\lib\site-packages\skopt\optimizer\optimizer.py:517: UserWarning: The objective has been evaluated at point [np.int64(300), np.int64(20)] before, using random point [np.int64(55), np.int64(8)]
+  warnings.warn(
+c:\Users\sangouda\Python3.10\lib\site-packages\skopt\optimizer\optimizer.py:517: UserWarning: The objective has been evaluated at point [np.int64(300), np.int64(20)] before, using random point [np.int64(52), np.int64(5)]
+  warnings.warn(
+c:\Users\sangouda\Python3.10\lib\site-packages\skopt\optimizer\optimizer.py:517: UserWarning: The objective has been evaluated at point [np.int64(300), np.int64(20)] before, using random point [np.int64(70), np.int64(16)]
+  warnings.warn(
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best hyperparameters:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;n_estimators =&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max_depth =&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best RMSE =&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best hyperparameters:
+n_estimators = 242
+max_depth = 18
+Best RMSE = 0.5039831396983969
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="reference external" href="https://distill.pub/2020/bayesian-optimization">https://distill.pub/2020/bayesian-optimization</a></p>
+<p><a class="reference external" href="https://ekamperi.github.io/machine%20learning/2021/06/11/acquisition-functions.html">https://ekamperi.github.io/machine learning/2021/06/11/acquisition-functions.html</a></p>
+<p><a class="reference external" href="https://www.researchgate.net/figure/An-illustration-of-one-iteration-of-the-expected-improvement-EI-algorithm-The_fig2_397700848">https://www.researchgate.net/figure/An-illustration-of-one-iteration-of-the-expected-improvement-EI-algorithm-The_fig2_397700848</a></p>
+</section>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./machine_learning\basics"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="04_part.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Common ML Pitfalls &amp; How to Prevent Them</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="06_part.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Hyperparameter Optimization</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intuition"><strong>1. Intuition</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-simple-step-by-step"><strong>2. Workflow (Simple Step-by-Step)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-initialize"><strong>Step 1: Initialize</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-fit-a-surrogate-model"><strong>Step 2: Fit a Surrogate Model</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-use-acquisition-function"><strong>Step 3: Use Acquisition Function</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-evaluate-the-true-function"><strong>Step 4: Evaluate the True Function</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-update-model"><strong>Step 5: Update Model</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-iterate"><strong>Step 6: Iterate</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-process-gp">Gaussian Process (GP)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Intuition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-idea">Core Idea</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-covariance-function">Kernel (Covariance Function)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#squared-exponential-rbf">Squared Exponential (RBF)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matern-kernel"><strong>Matern kernel</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-kernel"><strong>Linear kernel</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-gp-regression-works">How GP Regression Works</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-gp-assumes-joint-gaussian">Step 1: GP assumes joint Gaussian:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-compute-posterior-mean-and-variance">Step 2: Compute posterior mean and variance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-gaussian-processes-are-useful">Why Gaussian Processes Are Useful</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#they-handle-small-datasets-well">They handle small datasets well</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#provide-predictive-uncertainty">Provide predictive uncertainty</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#flexible">Flexible</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#closed-form-bayesian-inference">Closed-form Bayesian inference</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-visual-intuition">Simple Visual Intuition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gp-in-bayesian-optimization">GP in Bayesian Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-gps-fail">When GPs Fail</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acquisition-function">Acquisition Function</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#purpose-of-the-acquisition-function">Purpose of the Acquisition Function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-we-need-it">Why We Need It</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-acquisition-functions">Common Acquisition Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-improvement-ei">Expected Improvement (EI)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-of-improvement-pi">Probability of Improvement (PI)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#upper-confidence-bound-ucb">Upper Confidence Bound (UCB)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lower-confidence-bound-lcb">Lower Confidence Bound (LCB)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-intuition">Visual Intuition</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-acquisition-looks-in-the-optimization-loop">How Acquisition Looks in the Optimization Loop</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#step-by-step">Step-by-step:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By svgoudar
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
