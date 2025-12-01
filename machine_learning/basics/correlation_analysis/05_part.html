@@ -783,6 +783,43 @@ Mutual Information: 0.982281157165767
 </div>
 </div>
 </div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength / Meaning</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>ANOVA F</strong></p></td>
+<td><p><strong>1180.161</strong></p></td>
+<td><p>Difference in <strong>group means</strong> (parametric)</p></td>
+<td><p>Extremely large → highly significant</p></td>
+<td><p>Group means differ dramatically; categories separate the continuous variable almost perfectly.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Kruskal–Wallis H</strong></p></td>
+<td><p><strong>130.411</strong></p></td>
+<td><p>Difference in <strong>rank distributions</strong> (non-parametric)</p></td>
+<td><p>Very large → highly significant</p></td>
+<td><p>Even without normality assumptions, distributions differ strongly; confirms the ANOVA finding.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Eta-squared (η²)</strong></p></td>
+<td><p><strong>0.9414</strong></p></td>
+<td><p>Effect size for variance explained by the groups</p></td>
+<td><p><strong>Very large</strong> (near 1.0)</p></td>
+<td><p>About <strong>94% of the total variance</strong> in the continuous variable is explained by the categorical groups — an extremely strong effect.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.9823</strong></p></td>
+<td><p>Overall dependency (linear + nonlinear)</p></td>
+<td><p><strong>Very strong</strong></p></td>
+<td><p>The categorical groups contain almost <strong>all the information</strong> needed to predict the continuous outcome.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="categorical-nominal-x-binary-y">
 <h2><a class="toc-backref" href="#id3" role="doc-backlink">Categorical (Nominal) X → Binary Y</a><a class="headerlink" href="#categorical-nominal-x-binary-y" title="Permalink to this heading">#</a></h2>
@@ -832,6 +869,37 @@ Mutual Information: 0.10478676277429888
 </div>
 </div>
 </div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Chi-square</strong></p></td>
+<td><p><strong>111.4598</strong></p></td>
+<td><p>Test of independence between two categorical variables</p></td>
+<td><p>Statistically significant (large χ²)</p></td>
+<td><p>The observed category frequencies differ strongly from expected; variables are not independent.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Cramér’s V</strong></p></td>
+<td><p><strong>0.4426</strong></p></td>
+<td><p>Effect size for association (0 → none, 1 → perfect)</p></td>
+<td><p>Moderate</p></td>
+<td><p>There is a <strong>moderate association</strong>; categories of one variable provide useful information about the other.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.1048</strong></p></td>
+<td><p>Shared dependency (linear + nonlinear)</p></td>
+<td><p>Weak–Moderate</p></td>
+<td><p>Variables share some predictive information, but not very strong; notable dependency but not large.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="categorical-nominal-x-ordinal-y">
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Categorical (Nominal) X → Ordinal Y</a><a class="headerlink" href="#categorical-nominal-x-ordinal-y" title="Permalink to this heading">#</a></h2>
@@ -863,7 +931,7 @@ Mutual Information: 0.10478676277429888
 <span class="c1"># Chi-square</span>
 <span class="n">chi2</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">chi2_contingency</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
 
-<span class="c1"># Cramér’s V</span>
+<span class="c1"># Cramér&#39;s V</span>
 <span class="n">n</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 <span class="n">k</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">cramers_v</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">chi2</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
@@ -872,39 +940,60 @@ Mutual Information: 0.10478676277429888
 <span class="n">kendall</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kendalltau</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;X_cat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Y_ord&quot;</span><span class="p">])</span>
 
 <span class="c1"># Mutual Information</span>
-<span class="n">mi</span> <span class="o">=</span> <span class="n">mutual_info_classif</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;X_cat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Y_ord&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">mi</span> <span class="o">=</span> <span class="n">mutual_info_classif</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;X_cat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Y_ord&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Chi-square:&quot;</span><span class="p">,</span> <span class="n">chi2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cramér’s V:&quot;</span><span class="p">,</span> <span class="n">cramers_v</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cramér&#39;s V:&quot;</span><span class="p">,</span> <span class="n">cramers_v</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Kendall (proxy for Gamma):&quot;</span><span class="p">,</span> <span class="n">kendall</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mutual Information:&quot;</span><span class="p">,</span> <span class="n">mi</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="nn">~\AppData\Local\Temp\ipykernel_21700\722551818.py</span> in <span class="ni">?</span><span class="nt">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">28</span> <span class="c1"># Gamma (ordinal association) – approximate via Kendall (proxy)</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="n">kendall</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kendalltau</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;X_cat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Y_ord&quot;</span><span class="p">])</span>
-<span class="g g-Whitespace">     </span><span class="mi">30</span> 
-<span class="g g-Whitespace">     </span><span class="mi">31</span> <span class="c1"># Mutual Information</span>
-<span class="ne">---&gt; </span><span class="mi">32</span> <span class="n">mi</span> <span class="o">=</span> <span class="n">mutual_info_classif</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;X_cat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Y_ord&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">33</span> 
-<span class="g g-Whitespace">     </span><span class="mi">34</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Chi-square:&quot;</span><span class="p">,</span> <span class="n">chi2</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">35</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cramér’s V:&quot;</span><span class="p">,</span> <span class="n">cramers_v</span><span class="p">)</span>
-
-<span class="nn">c:\Users\sangouda\Python3.10\lib\site-packages\pandas\core\generic.py</span> in <span class="ni">?</span><span class="nt">(self, name)</span>
-<span class="g g-Whitespace">   </span><span class="mi">6317</span>             <span class="ow">and</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accessors</span>
-<span class="g g-Whitespace">   </span><span class="mi">6318</span>             <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info_axis</span><span class="o">.</span><span class="n">_can_hold_identifiers_and_holds_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">6319</span>         <span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">6320</span>             <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-<span class="ne">-&gt; </span><span class="mi">6321</span>         <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-
-<span class="ne">AttributeError</span>: &#39;Series&#39; object has no attribute &#39;reshape&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Chi-square: 1044.098687453175
+Cramér&#39;s V: 0.1590380091639929
+Kendall (proxy for Gamma): -0.030783163605000836
+Mutual Information: 0.028348024735318944
 </pre></div>
 </div>
 </div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Chi-square</strong></p></td>
+<td><p><strong>1044.099</strong></p></td>
+<td><p>Statistical test of independence for categorical variables</p></td>
+<td><p>Very large → statistically significant</p></td>
+<td><p>With large sample sizes, even weak associations become significant; χ² alone does not imply strong relationship.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Cramér’s V</strong></p></td>
+<td><p><strong>0.1590</strong></p></td>
+<td><p>Effect size of association (0 → none, 1 → perfect)</p></td>
+<td><p>Weak</p></td>
+<td><p>Only <strong>weak association</strong>; categories share limited information.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Kendall (proxy for Gamma)</strong></p></td>
+<td><p><strong>–0.0308</strong></p></td>
+<td><p>Directional ordinal association (if variables are ordinal)</p></td>
+<td><p>Very weak</p></td>
+<td><p>Almost no directional/ordinal relationship; slight negative sign is negligible.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.0283</strong></p></td>
+<td><p>Overall dependency (nonlinear + linear)</p></td>
+<td><p>Extremely weak</p></td>
+<td><p>Variables share almost no information; dependency is minimal.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 <section id="categorical-nominal-x-categorical-nominal-y">
@@ -956,6 +1045,37 @@ Mutual Information: 0.959229763967931
 </div>
 </div>
 </div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength / Meaning</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Chi-square</strong></p></td>
+<td><p><strong>266.346</strong></p></td>
+<td><p>Statistical test of independence between categorical variables</p></td>
+<td><p>Very large → highly significant</p></td>
+<td><p>Strong evidence that the variables are not independent.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Cramér’s V</strong></p></td>
+<td><p><strong>0.9422</strong></p></td>
+<td><p>Effect size of association (0 = none, 1 = perfect)</p></td>
+<td><p><strong>Very strong</strong></p></td>
+<td><p>Almost perfect association; categories of one variable almost fully determine the other.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.9592</strong></p></td>
+<td><p>Shared dependency (linear + nonlinear)</p></td>
+<td><p><strong>Very strong</strong></p></td>
+<td><p>Variables share nearly all information; one variable almost encodes the other.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="categorical-nominal-x-discrete-numeric-y">
 <h2><a class="toc-backref" href="#id6" role="doc-backlink">Categorical (Nominal) X → Discrete Numeric Y</a><a class="headerlink" href="#categorical-nominal-x-discrete-numeric-y" title="Permalink to this heading">#</a></h2>
@@ -1002,6 +1122,37 @@ Mutual Information: 0.025269047744596485
 </pre></div>
 </div>
 </div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength / Meaning</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>ANOVA F</strong></p></td>
+<td><p><strong>336.876</strong></p></td>
+<td><p>Difference in <strong>group means</strong> (parametric test)</p></td>
+<td><p>Statistically large</p></td>
+<td><p>Indicates that at least one group mean differs, but F alone does <em>not</em> indicate effect size.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Kruskal–Wallis H</strong></p></td>
+<td><p><strong>1063.826</strong></p></td>
+<td><p>Difference in <strong>rank distributions</strong> across groups</p></td>
+<td><p>Statistically very large</p></td>
+<td><p>Shows that group distributions differ, but large H can occur with large samples even if effect is small.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.02527</strong></p></td>
+<td><p>Amount of <strong>shared dependency</strong> (linear + nonlinear)</p></td>
+<td><p>Extremely weak</p></td>
+<td><p>Groups explain almost none of the variation in the continuous variable; practical effect is minimal.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 </section>

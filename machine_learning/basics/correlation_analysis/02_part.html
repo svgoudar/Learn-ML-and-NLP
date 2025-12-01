@@ -772,6 +772,51 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ANOVA: 91.13854962407781
+Kruskal–Wallis: 326.28931935656874
+Spearman: -0.11478463010727119
+Mutual Information: 0.021553397835710975
+</pre></div>
+</div>
+</div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength / Meaning</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>ANOVA (F-statistic)</strong></p></td>
+<td><p><strong>91.1385</strong></p></td>
+<td><p>Difference in <strong>mean values across groups</strong> (parametric test)</p></td>
+<td><p>Very large F → statistically significant difference</p></td>
+<td><p>Group means differ strongly; the continuous variable varies significantly across categories.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Kruskal–Wallis (H-statistic)</strong></p></td>
+<td><p><strong>326.2893</strong></p></td>
+<td><p>Difference in <strong>rank distributions</strong> across groups (non-parametric)</p></td>
+<td><p>Very large H → highly significant</p></td>
+<td><p>The groups have different distributions; effect is strong even without assuming normality.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Spearman</strong></p></td>
+<td><p><strong>–0.1148</strong></p></td>
+<td><p>Monotonic (rank-based) association</p></td>
+<td><p>Very weak negative</p></td>
+<td><p>No meaningful monotonic trend between the variables; direction is negligible.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.0216</strong></p></td>
+<td><p>Overall dependency (linear + nonlinear)</p></td>
+<td><p>Extremely weak</p></td>
+<td><p>Variables share almost no information; practically independent.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 <hr class="docutils" />
@@ -820,6 +865,37 @@ Mutual Information: 0.09710451880923898
 </div>
 </div>
 </div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength / Meaning</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Mann–Whitney U</strong></p></td>
+<td><p><strong>56698.0</strong></p></td>
+<td><p>Difference in <strong>distributions</strong> between two groups (non-parametric)</p></td>
+<td><p>Large U; significance depends on sample sizes</p></td>
+<td><p>Suggests the two groups differ, but significance cannot be determined without group sizes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Spearman</strong></p></td>
+<td><p><strong>–0.4426</strong></p></td>
+<td><p>Monotonic (rank-based) association</p></td>
+<td><p>Moderate negative</p></td>
+<td><p>As X increases, Y tends to decrease in a moderately consistent ranked pattern.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.0971</strong></p></td>
+<td><p>Overall dependency (linear + nonlinear)</p></td>
+<td><p>Weak</p></td>
+<td><p>Variables share a small amount of information; dependency exists but is modest.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="discrete-numeric-x-ordinal-y">
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Discrete Numeric X → Ordinal Y</a><a class="headerlink" href="#discrete-numeric-x-ordinal-y" title="Permalink to this heading">#</a></h2>
@@ -864,6 +940,37 @@ Mutual Information: 0.007406668333802546
 </pre></div>
 </div>
 </div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Spearman</strong></p></td>
+<td><p><strong>–0.1412</strong></p></td>
+<td><p>Monotonic (rank-based) association</p></td>
+<td><p>Very weak</p></td>
+<td><p>No meaningful monotonic trend; slight negative direction but too small to matter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Kendall</strong></p></td>
+<td><p><strong>–0.1216</strong></p></td>
+<td><p>Pairwise concordance (rank agreement)</p></td>
+<td><p>Very weak</p></td>
+<td><p>Pairs do not show consistent directional agreement; relationship is almost random.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.0074</strong></p></td>
+<td><p>Overall dependency (linear + nonlinear)</p></td>
+<td><p>Extremely weak</p></td>
+<td><p>Variables share almost no information; effectively independent.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 <hr class="docutils" />
@@ -911,6 +1018,37 @@ Mutual Information: 0.9293271682676154
 </pre></div>
 </div>
 </div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength / Meaning</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>ANOVA (F-statistic)</strong></p></td>
+<td><p><strong>905.41</strong></p></td>
+<td><p>Difference in <strong>group means</strong> (parametric test)</p></td>
+<td><p>Extremely large → highly significant</p></td>
+<td><p>Group means differ dramatically; very strong evidence of separation between categories.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Kruskal–Wallis (H)</strong></p></td>
+<td><p><strong>138.25</strong></p></td>
+<td><p>Difference in <strong>rank distributions</strong> (non-parametric)</p></td>
+<td><p>Very large → highly significant</p></td>
+<td><p>Even without normality assumptions, groups differ strongly in distribution.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.9293</strong></p></td>
+<td><p>Shared dependency (linear + nonlinear)</p></td>
+<td><p>Very strong</p></td>
+<td><p>The categorical feature carries substantial predictive information about the continuous variable.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 <hr class="docutils" />
@@ -964,6 +1102,43 @@ Mutual Information: 0.01031983485907606
 </pre></div>
 </div>
 </div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Spearman</strong></p></td>
+<td><p><strong>0.0342</strong></p></td>
+<td><p>Monotonic (rank-based) association</p></td>
+<td><p>Extremely weak</p></td>
+<td><p>No meaningful monotonic trend; ordering of X and Y is essentially random.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Kendall</strong></p></td>
+<td><p><strong>0.0310</strong></p></td>
+<td><p>Pairwise rank concordance</p></td>
+<td><p>Extremely weak</p></td>
+<td><p>Little to no directional agreement between ranked values.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Chi-square</strong></p></td>
+<td><p><strong>592.96</strong></p></td>
+<td><p>Test of independence between <strong>categorical</strong> variables</p></td>
+<td><p>Depends on df; large χ² → deviation from independence</p></td>
+<td><p>Indicates the observed category frequencies differ from expected frequencies. Shows some form of association, but <em>does not</em> tell strength.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.0103</strong></p></td>
+<td><p>General dependency (linear + nonlinear)</p></td>
+<td><p>Extremely weak</p></td>
+<td><p>Variables share almost no information; nearly independent.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 </section>

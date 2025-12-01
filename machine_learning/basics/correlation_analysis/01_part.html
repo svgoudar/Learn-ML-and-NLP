@@ -768,6 +768,38 @@ Mutual Information: 0.17815067428832032
 </div>
 </div>
 </div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Strength</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Pearson = 0.586</p></td>
+<td><p>Linear</p></td>
+<td><p>Moderate–Strong</p></td>
+<td><p>Clear upward linear trend</p></td>
+</tr>
+<tr class="row-odd"><td><p>Spearman = 0.561</p></td>
+<td><p>Monotonic</p></td>
+<td><p>Moderate–Strong</p></td>
+<td><p>BMI ↑ → Disease ↑ consistently</p></td>
+</tr>
+<tr class="row-even"><td><p>Kendall = 0.391</p></td>
+<td><p>Rank</p></td>
+<td><p>Moderate</p></td>
+<td><p>Good concordance of ordering</p></td>
+</tr>
+<tr class="row-odd"><td><p>MI = 0.178</p></td>
+<td><p>Nonlinear</p></td>
+<td><p>Meaningful</p></td>
+<td><p>BMI carries predictive signal</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="continuous-x-binary-y">
 <h2><a class="toc-backref" href="#id3" role="doc-backlink">Continuous X → Binary Y</a><a class="headerlink" href="#continuous-x-binary-y" title="Permalink to this heading">#</a></h2>
@@ -810,6 +842,28 @@ Mutual Information: 0.3690285464383032
 </div>
 </div>
 </div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>What it Means</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Point–Biserial: –0.73</strong></p></td>
+<td><p>Very strong negative association</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Logistic β: –1.025</strong></p></td>
+<td><p>Higher X → sharply lower P(Y=1)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>AUC: 0.062</strong></p></td>
+<td><p>Model predicts perfectly in the reverse direction</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>MI: 0.369</strong></p></td>
+<td><p>High information content</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="continuous-x-ordinal-y">
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Continuous X → Ordinal Y</a><a class="headerlink" href="#continuous-x-ordinal-y" title="Permalink to this heading">#</a></h2>
@@ -847,6 +901,37 @@ Mutual Information: 0.2659892673280484
 </pre></div>
 </div>
 </div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Spearman</strong></p></td>
+<td><p><strong>0.6303</strong></p></td>
+<td><p>Monotonic (rank-based) correlation</p></td>
+<td><p>Strong positive</p></td>
+<td><p>As X increases, Y increases consistently in rank; strong ordered trend</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Kendall</strong></p></td>
+<td><p><strong>0.5069</strong></p></td>
+<td><p>Concordance of ranked pairs</p></td>
+<td><p>Strong positive</p></td>
+<td><p>Most observation pairs are concordant; X and Y move together directionally</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.2660</strong></p></td>
+<td><p>General dependency (linear + nonlinear)</p></td>
+<td><p>Moderate–Strong</p></td>
+<td><p>X contains meaningful predictive information about Y; noticeable shared dependency</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 <section id="continuous-x-nominal-categorical-y">
@@ -887,6 +972,37 @@ Mutual Information: 1.0063262962592772
 </div>
 </div>
 </div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Spearman</strong></p></td>
+<td><p><strong>0.6303</strong></p></td>
+<td><p>Monotonic (rank-based) association</p></td>
+<td><p>Strong positive</p></td>
+<td><p>X and Y increase together in a consistent ranked order; strong monotonic trend.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Kendall</strong></p></td>
+<td><p><strong>0.5069</strong></p></td>
+<td><p>Pairwise concordance (rank agreement)</p></td>
+<td><p>Strong positive</p></td>
+<td><p>Most observation pairs move in the same direction; high directional agreement.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.2660</strong></p></td>
+<td><p>Overall dependency (linear + nonlinear)</p></td>
+<td><p>Moderate–Strong</p></td>
+<td><p>X carries substantial information about Y; clear shared dependency.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="continuous-x-discrete-numeric-y">
 <h2><a class="toc-backref" href="#id6" role="doc-backlink">Continuous X → Discrete Numeric Y</a><a class="headerlink" href="#continuous-x-discrete-numeric-y" title="Permalink to this heading">#</a></h2>
@@ -925,6 +1041,43 @@ Mutual Information: 0.034846658720868895
 </pre></div>
 </div>
 </div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>What It Measures</p></th>
+<th class="head"><p>Strength</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Pearson</strong></p></td>
+<td><p><strong>–0.0722</strong></p></td>
+<td><p>Linear correlation</p></td>
+<td><p>Very weak</p></td>
+<td><p>No linear relationship; the small negative value is negligible and not meaningful.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Spearman</strong></p></td>
+<td><p><strong>–0.1054</strong></p></td>
+<td><p>Monotonic (rank-based) association</p></td>
+<td><p>Very weak</p></td>
+<td><p>No consistent increasing or decreasing trend; ordering is mostly random.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Kendall</strong></p></td>
+<td><p><strong>–0.0725</strong></p></td>
+<td><p>Pairwise concordance (rank agreement)</p></td>
+<td><p>Very weak</p></td>
+<td><p>No directional agreement; pairs behave nearly randomly.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Mutual Information</strong></p></td>
+<td><p><strong>0.0348</strong></p></td>
+<td><p>Overall dependency (linear + nonlinear)</p></td>
+<td><p>Extremely weak</p></td>
+<td><p>Variables share almost no information; effectively independent.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 </section>
