@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Parametric vs Non-Parametric Models &#8212; Machine Learning Handbook</title>
+    <title>Optimization Techniques &#8212; Machine Learning Handbook</title>
   
   
   
@@ -65,11 +65,11 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
     <script>window.MathJax = {"tex": {"macros": {"N": "\\mathbb{N}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'machine_learning/basics/03_part';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'machine_learning/basics/07_part';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Common ML Pitfalls &amp; How to Prevent Them" href="04_part.html" />
-    <link rel="prev" title="Learning approach Variants" href="02_part.html" />
+    <link rel="next" title="Correlation Analysis" href="correlation_analysis/overview.html" />
+    <link rel="prev" title="Hyperparameter Optimization" href="06_part.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -179,13 +179,13 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_part.html">Machine Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_part.html">Learning approach Variants</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Parametric vs Non-Parametric Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_part.html">Parametric vs Non-Parametric Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_part.html">Common ML Pitfalls &amp; How to Prevent Them</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05_part.html">Bayesian Optimization</a></li>
 
 
 <li class="toctree-l1"><a class="reference internal" href="06_part.html">Hyperparameter Optimization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07_part.html">Optimization Techniques</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Optimization Techniques</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="correlation_analysis/overview.html">Correlation Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="correlation_analysis/01_part.html">Continous X</a></li>
 
@@ -530,7 +530,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://colab.research.google.com/github/svgoudar/Learn-ML-and-NLP/blob/master/machine_learning/basics/03_part.ipynb" target="_blank"
+      <li><a href="https://colab.research.google.com/github/svgoudar/Learn-ML-and-NLP/blob/master/machine_learning/basics/07_part.ipynb" target="_blank"
    class="btn btn-sm dropdown-item"
    title="Launch onColab"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -578,7 +578,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/svgoudar/Learn-ML-and-NLP/issues/new?title=Issue%20on%20page%20%2Fmachine_learning/basics/03_part.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/svgoudar/Learn-ML-and-NLP/issues/new?title=Issue%20on%20page%20%2Fmachine_learning/basics/07_part.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -608,7 +608,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../../_sources/machine_learning/basics/03_part.ipynb" target="_blank"
+      <li><a href="../../_sources/machine_learning/basics/07_part.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -692,7 +692,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Parametric vs Non-Parametric Models</h1>
+    <h1>Optimization Techniques</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -702,8 +702,47 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-models">Parametric Models</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-parametric-models">Non-Parametric Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-based-optimization">Gradient-Based Optimization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-descent-gd">Gradient Descent (GD)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-gradient-descent">Types of Gradient Descent:</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-batch-gradient-descent"><strong>A. Batch Gradient Descent</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-stochastic-gradient-descent-sgd"><strong>B. Stochastic Gradient Descent (SGD)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-mini-batch-gradient-descent"><strong>C. Mini-Batch Gradient Descent</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-gradient-optimization-first-order-methods">Advanced Gradient Optimization (First-Order Methods)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momentum">Momentum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nesterov-accelerated-gradient-nag">Nesterov Accelerated Gradient (NAG)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adagrad">AdaGrad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rmsprop">RMSProp</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adam-adaptive-moment-estimation">Adam (Adaptive Moment Estimation)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#second-order-optimization">Second-Order Optimization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#newtons-method">Newton’s Method</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quasi-newton-methods-e-g-bfgs-l-bfgs">Quasi-Newton Methods (e.g., BFGS, L-BFGS)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convex-optimization-techniques">Convex Optimization Techniques</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evolutionary-optimization-gradient-free">Evolutionary Optimization (Gradient-Free)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#genetic-algorithms">Genetic Algorithms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#particle-swarm-optimization">Particle Swarm Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulated-annealing">Simulated Annealing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-optimization">Bayesian Optimization**</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-descent">Coordinate Descent</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-free-local-search">Gradient-Free Local Search</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neldermead">Nelder–Mead</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-in-deep-learning">Optimization in Deep Learning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-rate-scheduling">Learning Rate Scheduling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization-based-optimization">Regularization-Based Optimization</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -718,118 +757,328 @@ document.write(`
   <nav class="contents" id="contents" role="doc-toc">
 <p class="topic-title">Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#parametric-vs-non-parametric-models" id="id1">Parametric vs Non-Parametric Models</a></p>
+<li><p><a class="reference internal" href="#optimization-techniques" id="id1">Optimization Techniques</a></p>
 <ul>
-<li><p><a class="reference internal" href="#parametric-models" id="id2">Parametric Models</a></p></li>
-<li><p><a class="reference internal" href="#non-parametric-models" id="id3">Non-Parametric Models</a></p></li>
+<li><p><a class="reference internal" href="#gradient-based-optimization" id="id2">Gradient-Based Optimization</a></p>
+<ul>
+<li><p><a class="reference internal" href="#gradient-descent-gd" id="id3">Gradient Descent (GD)</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#types-of-gradient-descent" id="id4">Types of Gradient Descent:</a></p>
+<ul>
+<li><p><a class="reference internal" href="#a-batch-gradient-descent" id="id5"><strong>A. Batch Gradient Descent</strong></a></p></li>
+<li><p><a class="reference internal" href="#b-stochastic-gradient-descent-sgd" id="id6"><strong>B. Stochastic Gradient Descent (SGD)</strong></a></p></li>
+<li><p><a class="reference internal" href="#c-mini-batch-gradient-descent" id="id7"><strong>C. Mini-Batch Gradient Descent</strong></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#advanced-gradient-optimization-first-order-methods" id="id8">Advanced Gradient Optimization (First-Order Methods)</a></p>
+<ul>
+<li><p><a class="reference internal" href="#momentum" id="id9">Momentum</a></p></li>
+<li><p><a class="reference internal" href="#nesterov-accelerated-gradient-nag" id="id10">Nesterov Accelerated Gradient (NAG)</a></p></li>
+<li><p><a class="reference internal" href="#adagrad" id="id11">AdaGrad</a></p></li>
+<li><p><a class="reference internal" href="#rmsprop" id="id12">RMSProp</a></p></li>
+<li><p><a class="reference internal" href="#adam-adaptive-moment-estimation" id="id13">Adam (Adaptive Moment Estimation)</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#second-order-optimization" id="id14">Second-Order Optimization</a></p>
+<ul>
+<li><p><a class="reference internal" href="#newtons-method" id="id15">Newton’s Method</a></p></li>
+<li><p><a class="reference internal" href="#quasi-newton-methods-e-g-bfgs-l-bfgs" id="id16">Quasi-Newton Methods (e.g., BFGS, L-BFGS)</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#convex-optimization-techniques" id="id17">Convex Optimization Techniques</a></p></li>
+<li><p><a class="reference internal" href="#evolutionary-optimization-gradient-free" id="id18">Evolutionary Optimization (Gradient-Free)</a></p>
+<ul>
+<li><p><a class="reference internal" href="#genetic-algorithms" id="id19">Genetic Algorithms</a></p></li>
+<li><p><a class="reference internal" href="#particle-swarm-optimization" id="id20">Particle Swarm Optimization</a></p></li>
+<li><p><a class="reference internal" href="#simulated-annealing" id="id21">Simulated Annealing</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#bayesian-optimization" id="id22">Bayesian Optimization**</a></p></li>
+<li><p><a class="reference internal" href="#coordinate-descent" id="id23">Coordinate Descent</a></p></li>
+<li><p><a class="reference internal" href="#gradient-free-local-search" id="id24">Gradient-Free Local Search</a></p>
+<ul>
+<li><p><a class="reference internal" href="#neldermead" id="id25">Nelder–Mead</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#optimization-in-deep-learning" id="id26">Optimization in Deep Learning</a></p>
+<ul>
+<li><p><a class="reference internal" href="#learning-rate-scheduling" id="id27">Learning Rate Scheduling</a></p></li>
+<li><p><a class="reference internal" href="#regularization-based-optimization" id="id28">Regularization-Based Optimization</a></p></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </nav>
-<section id="parametric-vs-non-parametric-models">
-<h1><a class="toc-backref" href="#id1" role="doc-backlink">Parametric vs Non-Parametric Models</a><a class="headerlink" href="#parametric-vs-non-parametric-models" title="Permalink to this heading">#</a></h1>
-<section id="parametric-models">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Parametric Models</a><a class="headerlink" href="#parametric-models" title="Permalink to this heading">#</a></h2>
-<p><strong>Definition</strong></p>
-<p>A <strong>parametric model</strong> assumes a <strong>fixed functional form</strong> and has a <strong>fixed number of parameters</strong> regardless of the size of the dataset.</p>
-<p>Examples:</p>
+<section id="optimization-techniques">
+<h1><a class="toc-backref" href="#id1" role="doc-backlink">Optimization Techniques</a><a class="headerlink" href="#optimization-techniques" title="Permalink to this heading">#</a></h1>
+<p>Optimization techniques are mathematical methods used to <strong>minimize the loss/cost function</strong> and improve model performance. They are fundamental to training models such as linear regression, logistic regression, SVMs, and neural networks.</p>
+<p>Below is a <strong>clear, structured, complete</strong> explanation.</p>
+<hr class="docutils" />
+<section id="gradient-based-optimization">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Gradient-Based Optimization</a><a class="headerlink" href="#gradient-based-optimization" title="Permalink to this heading">#</a></h2>
+<section id="gradient-descent-gd">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Gradient Descent (GD)</a><a class="headerlink" href="#gradient-descent-gd" title="Permalink to this heading">#</a></h3>
+<p>Updates parameters in the direction of the <strong>negative gradient</strong> of the cost function.</p>
+<p>Parameter update:</p>
+<div class="math notranslate nohighlight">
+\[
+\theta = \theta - \alpha \nabla_\theta J(\theta)
+\]</div>
+<p>Where:</p>
 <ul class="simple">
-<li><p>Linear Regression</p></li>
-<li><p>Logistic Regression</p></li>
-<li><p>Naive Bayes</p></li>
-<li><p>Neural Networks (fixed architecture)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\theta\)</span> = model parameters</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha\)</span> = learning rate</p></li>
+<li><p><span class="math notranslate nohighlight">\(\J(\theta)\)</span> = cost function</p></li>
 </ul>
-<p><strong>Key properties</strong></p>
+</section>
+</section>
+<section id="types-of-gradient-descent">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Types of Gradient Descent:</a><a class="headerlink" href="#types-of-gradient-descent" title="Permalink to this heading">#</a></h2>
+<section id="a-batch-gradient-descent">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink"><strong>A. Batch Gradient Descent</strong></a><a class="headerlink" href="#a-batch-gradient-descent" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Assumes a specific shape (e.g., linear, logistic curve)</p></li>
-<li><p>Model complexity is fixed</p></li>
-<li><p>Fast to train, easy to interpret</p></li>
-<li><p>Needs fewer data points</p></li>
-<li><p>Risk of <strong>underfitting</strong> if the true function is more complex</p></li>
+<li><p>Uses the <em>entire dataset</em> for every update</p></li>
+<li><p>Stable but slow</p></li>
+<li><p>Used in regression problems</p></li>
 </ul>
-<p><strong>Example</strong></p>
-<p>Linear regression:
-$<span class="math notranslate nohighlight">\(
-y = w_1x + w_0
-\)</span>$
-Only <strong>2 parameters</strong> (w₁, w₀) no matter how much data you have.</p>
+</section>
+<section id="b-stochastic-gradient-descent-sgd">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink"><strong>B. Stochastic Gradient Descent (SGD)</strong></a><a class="headerlink" href="#b-stochastic-gradient-descent-sgd" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Updates using a <em>single data sample</em></p></li>
+<li><p>Fast, noisy updates</p></li>
+<li><p>Helps escape local minima</p></li>
+</ul>
+</section>
+<section id="c-mini-batch-gradient-descent">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink"><strong>C. Mini-Batch Gradient Descent</strong></a><a class="headerlink" href="#c-mini-batch-gradient-descent" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Uses a <em>small batch</em> (e.g., 32, 64)</p></li>
+<li><p>Balanced: faster than batch, smoother than SGD</p></li>
+<li><p>Most common technique in deep learning</p></li>
+</ul>
+</section>
 </section>
 <hr class="docutils" />
-<section id="non-parametric-models">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Non-Parametric Models</a><a class="headerlink" href="#non-parametric-models" title="Permalink to this heading">#</a></h2>
-<p><strong>Definition</strong></p>
-<p>A <strong>non-parametric model</strong> does <em>not</em> assume a fixed functional form.
-The number of parameters grows with data, allowing the model to become more complex as data increases.</p>
+<section id="advanced-gradient-optimization-first-order-methods">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Advanced Gradient Optimization (First-Order Methods)</a><a class="headerlink" href="#advanced-gradient-optimization-first-order-methods" title="Permalink to this heading">#</a></h2>
+<p>These improve the speed and stability of gradient descent, especially in <strong>deep neural networks</strong>.</p>
+<section id="momentum">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Momentum</a><a class="headerlink" href="#momentum" title="Permalink to this heading">#</a></h3>
+<p>Adds memory of previous updates to smooth gradient:</p>
+<div class="math notranslate nohighlight">
+\[
+v_t = \beta v_{t-1} + (1-\beta)\nabla J(\theta)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\theta = \theta - \alpha v_t
+\]</div>
+<p>Reduces oscillations and speeds convergence.</p>
+</section>
+<hr class="docutils" />
+<section id="nesterov-accelerated-gradient-nag">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Nesterov Accelerated Gradient (NAG)</a><a class="headerlink" href="#nesterov-accelerated-gradient-nag" title="Permalink to this heading">#</a></h3>
+<p>Looks ahead before taking a step.
+Faster and more accurate than standard momentum.</p>
+</section>
+<hr class="docutils" />
+<section id="adagrad">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">AdaGrad</a><a class="headerlink" href="#adagrad" title="Permalink to this heading">#</a></h3>
+<p>Adapts learning rate for each parameter individually.
+Works well with sparse data (NLP).</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_i = \theta_i - \frac{\alpha}{\sqrt{G_{ii}}} \nabla J(\theta_i)
+\]</div>
+<p>But learning rate keeps shrinking → stagnation.</p>
+</section>
+<hr class="docutils" />
+<section id="rmsprop">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">RMSProp</a><a class="headerlink" href="#rmsprop" title="Permalink to this heading">#</a></h3>
+<p>Improves AdaGrad by using an <em>exponential moving average</em> of squared gradients.</p>
+<p>Great for:</p>
+<ul class="simple">
+<li><p>non-stationary data</p></li>
+<li><p>deep networks</p></li>
+<li><p>recurrent networks</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="adam-adaptive-moment-estimation">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Adam (Adaptive Moment Estimation)</a><a class="headerlink" href="#adam-adaptive-moment-estimation" title="Permalink to this heading">#</a></h3>
+<p>Most widely used optimizer.</p>
+<p>Computes:</p>
+<ul class="simple">
+<li><p>moving average of gradients</p></li>
+<li><p>moving average of squared gradients</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\theta = \theta - \alpha \frac{\hat{m}}{\sqrt{\hat{v}}+\epsilon}
+\]</div>
+<p>Combines momentum + RMSProp.
+Works well for almost all deep learning tasks.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="second-order-optimization">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Second-Order Optimization</a><a class="headerlink" href="#second-order-optimization" title="Permalink to this heading">#</a></h2>
+<p>Uses curvature (Hessian matrix).</p>
+<section id="newtons-method">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Newton’s Method</a><a class="headerlink" href="#newtons-method" title="Permalink to this heading">#</a></h3>
+<p>Fast convergence but expensive (requires Hessian).
+Used in logistic regression solvers.</p>
+</section>
+<section id="quasi-newton-methods-e-g-bfgs-l-bfgs">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">Quasi-Newton Methods (e.g., BFGS, L-BFGS)</a><a class="headerlink" href="#quasi-newton-methods-e-g-bfgs-l-bfgs" title="Permalink to this heading">#</a></h3>
+<p>Approximate Hessian instead of computing it explicitly.</p>
+<p>Used in:</p>
+<ul class="simple">
+<li><p>classical ML models</p></li>
+<li><p>scikit-learn optimization</p></li>
+<li><p>small-to-medium datasets</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="convex-optimization-techniques">
+<h2><a class="toc-backref" href="#id17" role="doc-backlink">Convex Optimization Techniques</a><a class="headerlink" href="#convex-optimization-techniques" title="Permalink to this heading">#</a></h2>
+<p>Used in models where the cost surface is convex (one global minimum).</p>
 <p>Examples:</p>
 <ul class="simple">
-<li><p>k-Nearest Neighbors</p></li>
-<li><p>Decision Trees</p></li>
-<li><p>Random Forest</p></li>
-<li><p>Gaussian Processes</p></li>
-<li><p>Kernel SVM</p></li>
-<li><p>Histogram or Kernel Density Estimation</p></li>
+<li><p>Linear Regression (closed-form solution)</p></li>
+<li><p>Logistic Regression (convex optimization)</p></li>
+<li><p>SVM (Quadratic Programming)</p></li>
+<li><p>Lasso/Ridge Regression (regularized convex problems)</p></li>
 </ul>
-<p><strong>Key properties</strong></p>
-<ul class="simple">
-<li><p>Flexible; data determines model shape</p></li>
-<li><p>Can learn very complex patterns</p></li>
-<li><p>Need more data to generalize well</p></li>
-<li><p>Higher computation cost</p></li>
-<li><p>Risk of <strong>overfitting</strong> without regularization</p></li>
-</ul>
-<p><strong>Example</strong></p>
-<p>k-Nearest Neighbors (kNN):
-Prediction depends on stored data points.
-More data → model becomes larger and more complex.</p>
+<p>Convex optimization guarantees global optimum.</p>
+</section>
 <hr class="docutils" />
-<p><strong>Side-by-Side Comparison</strong></p>
+<section id="evolutionary-optimization-gradient-free">
+<h2><a class="toc-backref" href="#id18" role="doc-backlink">Evolutionary Optimization (Gradient-Free)</a><a class="headerlink" href="#evolutionary-optimization-gradient-free" title="Permalink to this heading">#</a></h2>
+<p>Used when gradients are unavailable or the surface is not differentiable.</p>
+<section id="genetic-algorithms">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">Genetic Algorithms</a><a class="headerlink" href="#genetic-algorithms" title="Permalink to this heading">#</a></h3>
+<p>Inspired by natural evolution.
+Used for feature selection or hyperparameter tuning.</p>
+</section>
+<section id="particle-swarm-optimization">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">Particle Swarm Optimization</a><a class="headerlink" href="#particle-swarm-optimization" title="Permalink to this heading">#</a></h3>
+<p>Simulates groups of particles moving toward the best-known solution.</p>
+<p>Useful for:</p>
+<ul class="simple">
+<li><p>global optimization</p></li>
+<li><p>hyperparameter tuning</p></li>
+</ul>
+</section>
+<section id="simulated-annealing">
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">Simulated Annealing</a><a class="headerlink" href="#simulated-annealing" title="Permalink to this heading">#</a></h3>
+<p>Random search guided by probability.
+Helps escape local minima.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="bayesian-optimization">
+<h2><a class="toc-backref" href="#id22" role="doc-backlink">Bayesian Optimization**</a><a class="headerlink" href="#bayesian-optimization" title="Permalink to this heading">#</a></h2>
+<p>Models the objective function using a <strong>Gaussian Process</strong> and chooses next evaluations via <strong>acquisition functions</strong>.</p>
+<p>Used when:</p>
+<ul class="simple">
+<li><p>evaluations are expensive</p></li>
+<li><p>black-box functions</p></li>
+<li><p>deep learning hyperparameters tuning</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="coordinate-descent">
+<h2><a class="toc-backref" href="#id23" role="doc-backlink">Coordinate Descent</a><a class="headerlink" href="#coordinate-descent" title="Permalink to this heading">#</a></h2>
+<p>Optimizes one parameter at a time.</p>
+<p>Used in:</p>
+<ul class="simple">
+<li><p>Lasso regression</p></li>
+<li><p>Matrix factorization</p></li>
+<li><p>SVM dual formulation</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="gradient-free-local-search">
+<h2><a class="toc-backref" href="#id24" role="doc-backlink">Gradient-Free Local Search</a><a class="headerlink" href="#gradient-free-local-search" title="Permalink to this heading">#</a></h2>
+<section id="neldermead">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">Nelder–Mead</a><a class="headerlink" href="#neldermead" title="Permalink to this heading">#</a></h3>
+<p>Works without gradients, using simplex updates.</p>
+<p>Used in:</p>
+<ul class="simple">
+<li><p>small parameter spaces</p></li>
+<li><p>noisy functions</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="optimization-in-deep-learning">
+<h2><a class="toc-backref" href="#id26" role="doc-backlink">Optimization in Deep Learning</a><a class="headerlink" href="#optimization-in-deep-learning" title="Permalink to this heading">#</a></h2>
+<section id="learning-rate-scheduling">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">Learning Rate Scheduling</a><a class="headerlink" href="#learning-rate-scheduling" title="Permalink to this heading">#</a></h3>
+<p>Adjust learning rate dynamically.</p>
+<p>Examples:</p>
+<ul class="simple">
+<li><p>Step decay</p></li>
+<li><p>Exponential decay</p></li>
+<li><p>ReduceLROnPlateau</p></li>
+<li><p>Cyclical learning rates</p></li>
+</ul>
+<p>Improves convergence stability.</p>
+</section>
+<hr class="docutils" />
+<section id="regularization-based-optimization">
+<h3><a class="toc-backref" href="#id28" role="doc-backlink">Regularization-Based Optimization</a><a class="headerlink" href="#regularization-based-optimization" title="Permalink to this heading">#</a></h3>
+<p>Used to reduce overfitting.</p>
+<p>Methods:</p>
+<ul class="simple">
+<li><p>L1/L2 regularization</p></li>
+<li><p>Dropout</p></li>
+<li><p>Early stopping</p></li>
+<li><p>Batch normalization</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Summary Table</strong></p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>Aspect</p></th>
-<th class="head"><p>Parametric</p></th>
-<th class="head"><p>Non-Parametric</p></th>
+<tr class="row-odd"><th class="head"><p>Category</p></th>
+<th class="head"><p>Techniques</p></th>
+<th class="head"><p>Use Cases</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Assumes fixed form?</p></td>
-<td><p>Yes</p></td>
-<td><p>No</p></td>
+<tr class="row-even"><td><p>First-order</p></td>
+<td><p>GD, SGD, Momentum, RMSProp, Adam</p></td>
+<td><p>Deep learning</p></td>
 </tr>
-<tr class="row-odd"><td><p>Number of parameters</p></td>
-<td><p>Fixed</p></td>
-<td><p>Grows with data</p></td>
+<tr class="row-odd"><td><p>Second-order</p></td>
+<td><p>Newton, BFGS</p></td>
+<td><p>Classical ML, small data</p></td>
 </tr>
-<tr class="row-even"><td><p>Flexibility</p></td>
-<td><p>Low to medium</p></td>
-<td><p>High</p></td>
+<tr class="row-even"><td><p>Gradient-free</p></td>
+<td><p>GA, PSO, Annealing</p></td>
+<td><p>Black-box optimization</p></td>
 </tr>
-<tr class="row-odd"><td><p>Data requirement</p></td>
-<td><p>Low</p></td>
-<td><p>High</p></td>
+<tr class="row-odd"><td><p>Bayesian</p></td>
+<td><p>GP + EI/UCB</p></td>
+<td><p>Hyperparameter tuning</p></td>
 </tr>
-<tr class="row-even"><td><p>Computation</p></td>
-<td><p>Fast</p></td>
-<td><p>Slower</p></td>
+<tr class="row-even"><td><p>Convex</p></td>
+<td><p>QP, L-BFGS</p></td>
+<td><p>Linear/Logistic regression, SVM</p></td>
 </tr>
-<tr class="row-odd"><td><p>Risk</p></td>
-<td><p>Underfitting</p></td>
-<td><p>Overfitting</p></td>
-</tr>
-<tr class="row-even"><td><p>Examples</p></td>
-<td><p>Linear/Logistic regression, Naive Bayes</p></td>
-<td><p>kNN, Decision Trees, GPs, Random Forest</p></td>
+<tr class="row-odd"><td><p>Regularization</p></td>
+<td><p>L1/L2, dropout</p></td>
+<td><p>Reduce overfitting</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<hr class="docutils" />
-<p><strong>Intuitive Summary</strong></p>
-<ul class="simple">
-<li><p><strong>Parametric = fixed recipe</strong>
-(You decide the shape of the function; data only adjusts parameters.)</p></li>
-<li><p><strong>Non-parametric = flexible recipe</strong>
-(Model adapts shape based on how much data you provide; no fixed structure.)</p></li>
-</ul>
+</section>
 </section>
 </section>
 
@@ -864,20 +1113,20 @@ More data → model becomes larger and more complex.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="02_part.html"
+       href="06_part.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Learning approach Variants</p>
+        <p class="prev-next-title">Hyperparameter Optimization</p>
       </div>
     </a>
     <a class="right-next"
-       href="04_part.html"
+       href="correlation_analysis/overview.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Common ML Pitfalls &amp; How to Prevent Them</p>
+        <p class="prev-next-title">Correlation Analysis</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -897,8 +1146,47 @@ More data → model becomes larger and more complex.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-models">Parametric Models</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-parametric-models">Non-Parametric Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-based-optimization">Gradient-Based Optimization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-descent-gd">Gradient Descent (GD)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-gradient-descent">Types of Gradient Descent:</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-batch-gradient-descent"><strong>A. Batch Gradient Descent</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-stochastic-gradient-descent-sgd"><strong>B. Stochastic Gradient Descent (SGD)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-mini-batch-gradient-descent"><strong>C. Mini-Batch Gradient Descent</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-gradient-optimization-first-order-methods">Advanced Gradient Optimization (First-Order Methods)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momentum">Momentum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nesterov-accelerated-gradient-nag">Nesterov Accelerated Gradient (NAG)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adagrad">AdaGrad</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rmsprop">RMSProp</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adam-adaptive-moment-estimation">Adam (Adaptive Moment Estimation)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#second-order-optimization">Second-Order Optimization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#newtons-method">Newton’s Method</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quasi-newton-methods-e-g-bfgs-l-bfgs">Quasi-Newton Methods (e.g., BFGS, L-BFGS)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convex-optimization-techniques">Convex Optimization Techniques</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evolutionary-optimization-gradient-free">Evolutionary Optimization (Gradient-Free)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#genetic-algorithms">Genetic Algorithms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#particle-swarm-optimization">Particle Swarm Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulated-annealing">Simulated Annealing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-optimization">Bayesian Optimization**</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-descent">Coordinate Descent</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gradient-free-local-search">Gradient-Free Local Search</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neldermead">Nelder–Mead</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-in-deep-learning">Optimization in Deep Learning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-rate-scheduling">Learning Rate Scheduling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regularization-based-optimization">Regularization-Based Optimization</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
