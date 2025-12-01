@@ -707,9 +707,9 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-gradient-descent">Types of Gradient Descent:</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-batch-gradient-descent"><strong>A. Batch Gradient Descent</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-stochastic-gradient-descent-sgd"><strong>B. Stochastic Gradient Descent (SGD)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-mini-batch-gradient-descent"><strong>C. Mini-Batch Gradient Descent</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-gradient-descent">Batch Gradient Descent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-gradient-descent-sgd">Stochastic Gradient Descent (SGD)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mini-batch-gradient-descent">Mini-Batch Gradient Descent</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-gradient-optimization-first-order-methods">Advanced Gradient Optimization (First-Order Methods)</a><ul class="nav section-nav flex-column">
@@ -766,9 +766,9 @@ document.write(`
 </li>
 <li><p><a class="reference internal" href="#types-of-gradient-descent" id="id4">Types of Gradient Descent:</a></p>
 <ul>
-<li><p><a class="reference internal" href="#a-batch-gradient-descent" id="id5"><strong>A. Batch Gradient Descent</strong></a></p></li>
-<li><p><a class="reference internal" href="#b-stochastic-gradient-descent-sgd" id="id6"><strong>B. Stochastic Gradient Descent (SGD)</strong></a></p></li>
-<li><p><a class="reference internal" href="#c-mini-batch-gradient-descent" id="id7"><strong>C. Mini-Batch Gradient Descent</strong></a></p></li>
+<li><p><a class="reference internal" href="#batch-gradient-descent" id="id5">Batch Gradient Descent</a></p></li>
+<li><p><a class="reference internal" href="#stochastic-gradient-descent-sgd" id="id6">Stochastic Gradient Descent (SGD)</a></p></li>
+<li><p><a class="reference internal" href="#mini-batch-gradient-descent" id="id7">Mini-Batch Gradient Descent</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#advanced-gradient-optimization-first-order-methods" id="id8">Advanced Gradient Optimization (First-Order Methods)</a></p>
@@ -830,30 +830,30 @@ document.write(`
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\theta\)</span> = model parameters</p></li>
 <li><p><span class="math notranslate nohighlight">\(\alpha\)</span> = learning rate</p></li>
-<li><p><span class="math notranslate nohighlight">\(\J(\theta)\)</span> = cost function</p></li>
+<li><p><span class="math notranslate nohighlight">\(J(\theta)\)</span> = cost function</p></li>
 </ul>
 </section>
 </section>
 <section id="types-of-gradient-descent">
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Types of Gradient Descent:</a><a class="headerlink" href="#types-of-gradient-descent" title="Permalink to this heading">#</a></h2>
-<section id="a-batch-gradient-descent">
-<h3><a class="toc-backref" href="#id5" role="doc-backlink"><strong>A. Batch Gradient Descent</strong></a><a class="headerlink" href="#a-batch-gradient-descent" title="Permalink to this heading">#</a></h3>
+<section id="batch-gradient-descent">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Batch Gradient Descent</a><a class="headerlink" href="#batch-gradient-descent" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Uses the <em>entire dataset</em> for every update</p></li>
 <li><p>Stable but slow</p></li>
 <li><p>Used in regression problems</p></li>
 </ul>
 </section>
-<section id="b-stochastic-gradient-descent-sgd">
-<h3><a class="toc-backref" href="#id6" role="doc-backlink"><strong>B. Stochastic Gradient Descent (SGD)</strong></a><a class="headerlink" href="#b-stochastic-gradient-descent-sgd" title="Permalink to this heading">#</a></h3>
+<section id="stochastic-gradient-descent-sgd">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Stochastic Gradient Descent (SGD)</a><a class="headerlink" href="#stochastic-gradient-descent-sgd" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Updates using a <em>single data sample</em></p></li>
 <li><p>Fast, noisy updates</p></li>
 <li><p>Helps escape local minima</p></li>
 </ul>
 </section>
-<section id="c-mini-batch-gradient-descent">
-<h3><a class="toc-backref" href="#id7" role="doc-backlink"><strong>C. Mini-Batch Gradient Descent</strong></a><a class="headerlink" href="#c-mini-batch-gradient-descent" title="Permalink to this heading">#</a></h3>
+<section id="mini-batch-gradient-descent">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Mini-Batch Gradient Descent</a><a class="headerlink" href="#mini-batch-gradient-descent" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Uses a <em>small batch</em> (e.g., 32, 64)</p></li>
 <li><p>Balanced: faster than batch, smoother than SGD</p></li>
@@ -1151,9 +1151,9 @@ Helps escape local minima.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-gradient-descent">Types of Gradient Descent:</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-batch-gradient-descent"><strong>A. Batch Gradient Descent</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-stochastic-gradient-descent-sgd"><strong>B. Stochastic Gradient Descent (SGD)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-mini-batch-gradient-descent"><strong>C. Mini-Batch Gradient Descent</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-gradient-descent">Batch Gradient Descent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-gradient-descent-sgd">Stochastic Gradient Descent (SGD)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mini-batch-gradient-descent">Mini-Batch Gradient Descent</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-gradient-optimization-first-order-methods">Advanced Gradient Optimization (First-Order Methods)</a><ul class="nav section-nav flex-column">
